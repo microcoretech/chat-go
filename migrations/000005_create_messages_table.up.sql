@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS messages
+(
+    id         BIGSERIAL PRIMARY KEY,
+    text       VARCHAR   NOT NULL DEFAULT '',
+    status     SMALLINT  NOT NULL DEFAULT 2,
+    chat_id    BIGINT    NOT NULL REFERENCES chats ("id") ON UPDATE CASCADE ON DELETE CASCADE,
+    created_by BIGINT    NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+);

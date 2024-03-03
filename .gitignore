@@ -1,0 +1,23 @@
+# Ignore all logfiles and tempfiles.
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+
+# IDE config files
+.idea
+.vscode
+.DS_Store
+
+vendor/
+
+.env
+!.env.example
+tmp/
+
+# Go stuff
+go.work
+go.work.sum
+
+bin/
+bin/*
