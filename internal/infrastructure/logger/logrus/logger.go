@@ -28,8 +28,7 @@ func NewLogger(lvl logger.Level) (*logrus.Logger, error) {
 
 	logger := logrus.New()
 	logger.SetLevel(level)
-	logger.SetFormatter(&logrus.TextFormatter{
-		FullTimestamp:   true,
+	logger.SetFormatter(&logrus.JSONFormatter{
 		TimestampFormat: "2006-01-02 15:04:05",
 	})
 
