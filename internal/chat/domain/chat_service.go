@@ -1,13 +1,15 @@
 package domain
 
 import (
-	"chat/internal/chat/common"
-	chaterrors "chat/internal/chat/errors"
-	"chat/internal/common/domain"
-	"chat/internal/common/errors"
-	repository "chat/internal/common/repository"
 	"context"
+
 	"golang.org/x/exp/maps"
+
+	"mbobrovskyi/chat-go/internal/chat/common"
+	chaterrors "mbobrovskyi/chat-go/internal/chat/errors"
+	"mbobrovskyi/chat-go/internal/common/domain"
+	"mbobrovskyi/chat-go/internal/common/errors"
+	"mbobrovskyi/chat-go/internal/common/repository"
 )
 
 type ChatServiceImpl struct {
@@ -106,7 +108,9 @@ func (s *ChatServiceImpl) CreateChat(ctx context.Context, chat Chat) (*Chat, err
 		return nil, err
 	}
 
-	defer tx.Rollback()
+	defer func() {
+		_ = tx.Rollback()
+	}()
 
 	uniqueUsers := make(map[uint64]struct{})
 	uniqueUsers[chat.CreatedBy] = struct{}{}

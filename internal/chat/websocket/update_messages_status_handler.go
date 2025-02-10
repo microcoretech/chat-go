@@ -1,10 +1,11 @@
 package websocket
 
 import (
-	"chat/internal/chat/common"
-	"chat/internal/chat/domain"
 	"context"
 	"encoding/json"
+
+	"mbobrovskyi/chat-go/internal/chat/common"
+	"mbobrovskyi/chat-go/internal/chat/domain"
 )
 
 func (e *EventHandler) updateMessagesStatusHandler(conn Connection, rawData []byte) error {

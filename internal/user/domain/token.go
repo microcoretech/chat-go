@@ -1,8 +1,9 @@
 package domain
 
 import (
-	"chat/internal/common/domain"
 	"time"
+
+	"mbobrovskyi/chat-go/internal/common/domain"
 )
 
 type Token struct {

@@ -1,6 +1,6 @@
 package connector
 
-import "chat/internal/common/domain"
+import "mbobrovskyi/chat-go/internal/common/domain"
 
 type Connection interface {
 	IsClosed() bool

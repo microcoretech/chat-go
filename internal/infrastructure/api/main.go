@@ -1,16 +1,18 @@
 package api
 
 import (
-	"chat/internal/infrastructure/configs"
-	"chat/internal/infrastructure/logger"
 	"context"
 	"errors"
+	"log"
+	"time"
+
 	"github.com/gofiber/fiber/v2"
 	fiberCors "github.com/gofiber/fiber/v2/middleware/cors"
 	fiberLogger "github.com/gofiber/fiber/v2/middleware/logger"
 	fiberRecover "github.com/gofiber/fiber/v2/middleware/recover"
-	"log"
-	"time"
+
+	"mbobrovskyi/chat-go/internal/infrastructure/configs"
+	"mbobrovskyi/chat-go/internal/infrastructure/logger"
 )
 
 var (
@@ -77,15 +79,11 @@ func (s *httpServerImpl) Start(ctx context.Context) error {
 	}()
 
 	go func() {
-		for s.isStarted {
-			select {
-			case <-ctx.Done():
-				_ = s.app.ShutdownWithTimeout(time.Minute)
-			}
-		}
+		<-ctx.Done()
+		_ = s.app.ShutdownWithTimeout(time.Minute)
 	}()
 
-	if err := s.app.Listen(s.cfg.HttpServerAddr); err != nil {
+	if err := s.app.Listen(s.cfg.HTTPServerAddr); err != nil {
 		return err
 	}
 

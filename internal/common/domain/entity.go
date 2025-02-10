@@ -4,7 +4,7 @@ type Entity struct {
 	id uint64
 }
 
-func (e *Entity) GetId() uint64 {
+func (e *Entity) GetID() uint64 {
 	return e.id
 }
 
@@ -24,7 +24,7 @@ func NewEntity() *Entity {
 	return &Entity{}
 }
 
-func NewEntityWithId(id uint64) *Entity {
+func NewEntityWithID(id uint64) *Entity {
 	return &Entity{
 		id: id,
 	}

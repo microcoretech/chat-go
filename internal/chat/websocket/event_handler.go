@@ -1,10 +1,11 @@
 package websocket
 
 import (
-	"chat/internal/chat/domain"
-	"chat/internal/infrastructure/connector"
-	"chat/internal/infrastructure/validator"
 	"context"
+
+	"mbobrovskyi/chat-go/internal/chat/domain"
+	"mbobrovskyi/chat-go/internal/infrastructure/connector"
+	"mbobrovskyi/chat-go/internal/infrastructure/validator"
 )
 
 type MessageService interface {

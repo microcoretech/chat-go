@@ -1,9 +1,11 @@
 package http
 
 import (
-	"chat/internal/common/errors"
-	"github.com/gofiber/fiber/v2"
 	"strings"
+
+	"github.com/gofiber/fiber/v2"
+
+	"mbobrovskyi/chat-go/internal/common/errors"
 )
 
 const (
@@ -70,7 +72,7 @@ func (m *AuthMiddleware) getTokenFromHeader(ctx *fiber.Ctx) (string, error) {
 	}
 
 	tokenPrefix := strings.ToLower(tokenParts[0])
-	if strings.ToLower(tokenPrefix) != strings.ToLower(bearerTokenType) {
+	if !strings.EqualFold(tokenPrefix, bearerTokenType) {
 		return "", errors.NewUnauthorizedError("invalid token type")
 	}
 

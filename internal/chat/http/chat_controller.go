@@ -1,18 +1,20 @@
 package http
 
 import (
-	"chat/internal/chat/common"
-	chatdomain "chat/internal/chat/domain"
-	chatwebsocket "chat/internal/chat/websocket"
-	"chat/internal/common/domain"
-	"chat/internal/common/errors"
-	"chat/internal/common/http"
-	"chat/internal/infrastructure/connector"
-	"chat/internal/infrastructure/validator"
+	"strconv"
+
 	"github.com/gofiber/contrib/websocket"
 	"github.com/gofiber/fiber/v2"
 	"github.com/samber/lo"
-	"strconv"
+
+	"mbobrovskyi/chat-go/internal/chat/common"
+	chatdomain "mbobrovskyi/chat-go/internal/chat/domain"
+	chatwebsocket "mbobrovskyi/chat-go/internal/chat/websocket"
+	"mbobrovskyi/chat-go/internal/common/domain"
+	"mbobrovskyi/chat-go/internal/common/errors"
+	"mbobrovskyi/chat-go/internal/common/http"
+	"mbobrovskyi/chat-go/internal/infrastructure/connector"
+	"mbobrovskyi/chat-go/internal/infrastructure/validator"
 )
 
 type ChatController struct {

@@ -1,6 +1,6 @@
 package domain
 
-import "chat/internal/common/domain"
+import "mbobrovskyi/chat-go/internal/common/domain"
 
 type MessageFilter struct {
 	IDs          []uint64

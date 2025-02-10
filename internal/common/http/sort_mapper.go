@@ -1,10 +1,12 @@
 package http
 
 import (
-	"chat/internal/common/domain"
 	"errors"
-	"golang.org/x/exp/slices"
 	"strings"
+
+	"golang.org/x/exp/slices"
+
+	"mbobrovskyi/chat-go/internal/common/domain"
 )
 
 func SortFromDto(querySort string, sortFields []string) (*domain.Sort, error) {

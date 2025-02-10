@@ -1,9 +1,10 @@
 package http
 
 import (
-	"chat/internal/common/domain"
-	"chat/internal/common/http"
 	"time"
+
+	"mbobrovskyi/chat-go/internal/common/domain"
+	"mbobrovskyi/chat-go/internal/common/http"
 )
 
 type CreateChatDto struct {

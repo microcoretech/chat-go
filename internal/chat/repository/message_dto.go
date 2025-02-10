@@ -1,10 +1,11 @@
 package repository
 
 import (
-	"chat/internal/chat/domain"
 	"database/sql/driver"
 	"encoding/json"
 	"errors"
+
+	"mbobrovskyi/chat-go/internal/chat/domain"
 )
 
 type messageDto domain.Message

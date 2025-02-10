@@ -1,8 +1,8 @@
 package http
 
 import (
-	"chat/internal/common/http"
-	"chat/internal/user/domain"
+	"mbobrovskyi/chat-go/internal/common/http"
+	"mbobrovskyi/chat-go/internal/user/domain"
 )
 
 func TokenToDto(token domain.Token) TokenDto {

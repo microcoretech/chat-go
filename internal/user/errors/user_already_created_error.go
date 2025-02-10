@@ -1,8 +1,8 @@
 package errors
 
 import (
-	"chat/internal/common/errors"
-	"chat/internal/user/common"
+	"mbobrovskyi/chat-go/internal/common/errors"
+	"mbobrovskyi/chat-go/internal/user/common"
 )
 
 const UserAlreadyCreatedErrorType = "UserAlreadyCreatedError"

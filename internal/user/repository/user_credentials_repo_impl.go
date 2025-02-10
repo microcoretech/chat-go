@@ -1,13 +1,14 @@
 package repository
 
 import (
-	"chat/internal/common/errors"
-	common_repo "chat/internal/common/repository"
-	"chat/internal/user/common"
-	"chat/internal/user/domain"
 	"context"
 	"database/sql"
 	"fmt"
+
+	"mbobrovskyi/chat-go/internal/common/errors"
+	common_repo "mbobrovskyi/chat-go/internal/common/repository"
+	"mbobrovskyi/chat-go/internal/user/common"
+	"mbobrovskyi/chat-go/internal/user/domain"
 )
 
 type UserCredentialsRepoImpl struct {
@@ -30,7 +31,7 @@ func (r *UserCredentialsRepoImpl) scan(rows *sql.Rows) ([]domain.UserCredentials
 			&userCredentials.User.FirstName,
 			&userCredentials.User.LastName,
 			&userCredentials.User.AboutMe,
-			&userCredentials.User.Image.Url,
+			&userCredentials.User.Image.URL,
 			&userCredentials.User.CreatedAt,
 			&userCredentials.User.UpdatedAt,
 		}

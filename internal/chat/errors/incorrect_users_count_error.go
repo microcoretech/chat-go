@@ -1,8 +1,8 @@
 package errors
 
 import (
-	"chat/internal/chat/common"
-	"chat/internal/common/errors"
+	"mbobrovskyi/chat-go/internal/chat/common"
+	"mbobrovskyi/chat-go/internal/common/errors"
 )
 
 const IncorrectUsersCountErrorType = "IncorrectUsersCountError"

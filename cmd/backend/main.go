@@ -1,28 +1,30 @@
 package main
 
 import (
-	chatdomain "chat/internal/chat/domain"
-	chathttp "chat/internal/chat/http"
-	chatrepository "chat/internal/chat/repository"
-	chatwebsocket "chat/internal/chat/websocket"
-	"chat/internal/common/repository"
-	"chat/internal/infrastructure/api"
-	"chat/internal/infrastructure/configs"
-	"chat/internal/infrastructure/connector"
-	"chat/internal/infrastructure/database/postgres"
-	"chat/internal/infrastructure/database/redis"
-	"chat/internal/infrastructure/logger/logrus"
-	"chat/internal/infrastructure/validator"
-	usercontract "chat/internal/user/contract"
-	userdomain "chat/internal/user/domain"
-	userhttp "chat/internal/user/http"
-	userrepository "chat/internal/user/repository"
 	"context"
 	"fmt"
-	"golang.org/x/sync/errgroup"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"golang.org/x/sync/errgroup"
+
+	chatdomain "mbobrovskyi/chat-go/internal/chat/domain"
+	chathttp "mbobrovskyi/chat-go/internal/chat/http"
+	chatrepository "mbobrovskyi/chat-go/internal/chat/repository"
+	chatwebsocket "mbobrovskyi/chat-go/internal/chat/websocket"
+	"mbobrovskyi/chat-go/internal/common/repository"
+	"mbobrovskyi/chat-go/internal/infrastructure/api"
+	"mbobrovskyi/chat-go/internal/infrastructure/configs"
+	"mbobrovskyi/chat-go/internal/infrastructure/connector"
+	"mbobrovskyi/chat-go/internal/infrastructure/database/postgres"
+	"mbobrovskyi/chat-go/internal/infrastructure/database/redis"
+	"mbobrovskyi/chat-go/internal/infrastructure/logger/logrus"
+	"mbobrovskyi/chat-go/internal/infrastructure/validator"
+	usercontract "mbobrovskyi/chat-go/internal/user/contract"
+	userdomain "mbobrovskyi/chat-go/internal/user/domain"
+	userhttp "mbobrovskyi/chat-go/internal/user/http"
+	userrepository "mbobrovskyi/chat-go/internal/user/repository"
 )
 
 func main() {
@@ -46,7 +48,7 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	dbConn, err := postgres.NewPostgres(ctx, cfg.PostgresUri)
+	dbConn, err := postgres.NewPostgres(ctx, cfg.PostgresURI)
 	if err != nil {
 		log.Fatal(fmt.Errorf("error on connection to postgres: %w", err))
 	}
@@ -96,6 +98,7 @@ func main() {
 	)
 
 	ctx, cancel = signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM, syscall.SIGQUIT)
+	defer cancel()
 
 	eg, ctx := errgroup.WithContext(ctx)
 

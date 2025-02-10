@@ -1,14 +1,15 @@
 package repository
 
 import (
-	"chat/internal/chat/common"
-	"chat/internal/chat/domain"
-	"chat/internal/common/errors"
-	"chat/internal/common/repository"
 	"context"
 	"database/sql"
 	"fmt"
 	"strings"
+
+	"mbobrovskyi/chat-go/internal/chat/common"
+	"mbobrovskyi/chat-go/internal/chat/domain"
+	"mbobrovskyi/chat-go/internal/common/errors"
+	"mbobrovskyi/chat-go/internal/common/repository"
 )
 
 type UserChatRepoImpl struct {
@@ -74,7 +75,7 @@ func (r *UserChatRepoImpl) CreateUserChats(ctx context.Context, userChats []doma
 }
 
 func (r *UserChatRepoImpl) DeleteUserChats(ctx context.Context, userChat []domain.UserChat, tx repository.Tx) error {
-	//TODO implement me
+	// TODO implement me
 	panic("implement me")
 }
 

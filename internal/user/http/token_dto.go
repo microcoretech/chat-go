@@ -1,8 +1,9 @@
 package http
 
 import (
-	"chat/internal/common/http"
 	"time"
+
+	"mbobrovskyi/chat-go/internal/common/http"
 )
 
 type TokenDto struct {

@@ -1,9 +1,10 @@
 package http
 
 import (
-	"chat/internal/chat/domain"
-	"chat/internal/common/http"
 	"github.com/samber/lo"
+
+	"mbobrovskyi/chat-go/internal/chat/domain"
+	"mbobrovskyi/chat-go/internal/common/http"
 )
 
 func MessageToDto(message domain.Message) MessageDto {
