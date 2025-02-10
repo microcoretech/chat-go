@@ -1,10 +1,11 @@
 package websocket
 
 import (
-	"chat/internal/common/domain"
-	"chat/internal/infrastructure/connector"
 	"github.com/fasthttp/websocket"
 	"golang.org/x/exp/slices"
+
+	"mbobrovskyi/chat-go/internal/common/domain"
+	"mbobrovskyi/chat-go/internal/infrastructure/connector"
 )
 
 type Connection interface {

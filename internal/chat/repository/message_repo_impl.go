@@ -1,14 +1,15 @@
 package repository
 
 import (
-	"chat/internal/chat/common"
-	"chat/internal/chat/domain"
-	"chat/internal/common/errors"
-	"chat/internal/common/repository"
 	"context"
 	"database/sql"
 	"fmt"
 	"strings"
+
+	"mbobrovskyi/chat-go/internal/chat/common"
+	"mbobrovskyi/chat-go/internal/chat/domain"
+	"mbobrovskyi/chat-go/internal/common/errors"
+	"mbobrovskyi/chat-go/internal/common/repository"
 )
 
 type MessageRepoImpl struct {

@@ -1,10 +1,11 @@
 package domain
 
 import (
-	"chat/internal/common/domain"
-	"chat/internal/common/repository"
-	"chat/internal/user/errors"
 	"context"
+
+	"mbobrovskyi/chat-go/internal/common/domain"
+	"mbobrovskyi/chat-go/internal/common/repository"
+	"mbobrovskyi/chat-go/internal/user/errors"
 )
 
 type UserServiceImpl struct {
@@ -33,7 +34,7 @@ func (s *UserServiceImpl) GetUsers(ctx context.Context, filter *domain.UserFilte
 	}
 
 	if count == 0 {
-		return make([]domain.User, 0, 0), count, nil
+		return make([]domain.User, 0), count, nil
 	}
 
 	users, err := s.userRepo.GetUsers(ctx, filter)

@@ -1,16 +1,17 @@
 package repository
 
 import (
-	"chat/internal/common/domain"
-	commonerrors "chat/internal/common/errors"
-	"chat/internal/user/common"
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
-	"github.com/redis/go-redis/v9"
 	"strconv"
 	"time"
+
+	"github.com/redis/go-redis/v9"
+
+	"mbobrovskyi/chat-go/internal/common/domain"
+	commonerrors "mbobrovskyi/chat-go/internal/common/errors"
+	"mbobrovskyi/chat-go/internal/user/common"
 )
 
 type SessionRepository struct {
@@ -20,7 +21,7 @@ type SessionRepository struct {
 func (r *SessionRepository) GetSession(ctx context.Context, token string) (*domain.Session, error) {
 	tokenKey := r.getTokenKey(token)
 
-	sessionJson, err := r.redisClient.Get(ctx, tokenKey).Bytes()
+	sessionJSON, err := r.redisClient.Get(ctx, tokenKey).Bytes()
 	if err != nil {
 		if errors.Is(err, redis.Nil) {
 			return nil, nil
@@ -30,7 +31,7 @@ func (r *SessionRepository) GetSession(ctx context.Context, token string) (*doma
 
 	var session domain.Session
 
-	if err = json.Unmarshal(sessionJson, &session); err != nil {
+	if err = json.Unmarshal(sessionJSON, &session); err != nil {
 		return nil, commonerrors.NewDatabaseError(common.UserDomain, err, "error on unmarshal session")
 	}
 
@@ -51,7 +52,7 @@ func (r *SessionRepository) SetSession(ctx context.Context, token string, sessio
 	}
 
 	unixNow := time.Now().UTC().Unix()
-	unixNowStr := fmt.Sprint(unixNow)
+	unixNowStr := strconv.FormatInt(unixNow, 10)
 
 	if err = r.redisClient.ZRemRangeByScore(ctx, userKey, "-inf", unixNowStr).Err(); err != nil {
 		return commonerrors.NewDatabaseError(common.UserDomain, err, "error on remove tokens from tokens list")
@@ -106,7 +107,7 @@ func (r *SessionRepository) getTokenKey(token string) string {
 }
 
 func (r *SessionRepository) getUserKey(userID uint64) string {
-	return "user:" + fmt.Sprint(userID)
+	return "user:" + strconv.FormatUint(userID, 10)
 }
 
 func NewSessionRepo(

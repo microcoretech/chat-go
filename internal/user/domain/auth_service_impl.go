@@ -1,15 +1,17 @@
 package domain
 
 import (
-	"chat/internal/common/domain"
-	"chat/internal/common/errors"
-	"chat/internal/common/repository"
-	usererrors "chat/internal/user/errors"
 	"context"
 	"crypto/rand"
 	"encoding/hex"
-	"golang.org/x/crypto/bcrypt"
 	"time"
+
+	"golang.org/x/crypto/bcrypt"
+
+	"mbobrovskyi/chat-go/internal/common/domain"
+	"mbobrovskyi/chat-go/internal/common/errors"
+	"mbobrovskyi/chat-go/internal/common/repository"
+	usererrors "mbobrovskyi/chat-go/internal/user/errors"
 )
 
 type AuthServiceImpl struct {
@@ -99,7 +101,9 @@ func (s *AuthServiceImpl) SignUp(ctx context.Context, newUser domain.User, passw
 		return nil, err
 	}
 
-	defer tx.Rollback()
+	defer func() {
+		_ = tx.Rollback()
+	}()
 
 	createdUser, err := s.userRepo.CreateUser(ctx, newUser, tx)
 	if err != nil {

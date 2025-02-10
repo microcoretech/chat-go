@@ -1,9 +1,10 @@
 package domain
 
 import (
-	"chat/internal/common/domain"
 	"context"
 	"time"
+
+	"mbobrovskyi/chat-go/internal/common/domain"
 )
 
 type SessionRepository interface {

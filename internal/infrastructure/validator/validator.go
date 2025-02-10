@@ -1,10 +1,12 @@
 package validator
 
 import (
-	"chat/internal/common/errors"
-	"github.com/go-playground/validator/v10"
 	"regexp"
 	"unicode"
+
+	"github.com/go-playground/validator/v10"
+
+	"mbobrovskyi/chat-go/internal/common/errors"
 )
 
 type Validate interface {

@@ -1,30 +1,31 @@
 package api
 
 import (
-	chaterrors "chat/internal/chat/errors"
-	"chat/internal/common/common"
-	"chat/internal/common/errors"
-	"chat/internal/infrastructure/configs"
-	"chat/internal/infrastructure/logger"
-	usererrors "chat/internal/user/errors"
 	"encoding/json"
 	"fmt"
-	"github.com/gofiber/fiber/v2"
 	"net/http"
+
+	"github.com/gofiber/fiber/v2"
+
+	chaterrors "mbobrovskyi/chat-go/internal/chat/errors"
+	"mbobrovskyi/chat-go/internal/common/common"
+	"mbobrovskyi/chat-go/internal/common/errors"
+	"mbobrovskyi/chat-go/internal/infrastructure/configs"
+	"mbobrovskyi/chat-go/internal/infrastructure/logger"
+	usererrors "mbobrovskyi/chat-go/internal/user/errors"
 )
 
 func ErrorHandler(log logger.Logger, environment configs.Environment) fiber.ErrorHandler {
 	return func(ctx *fiber.Ctx, err error) error {
 		var statusCode int
 
-		switch err.(type) {
+		switch errType := err.(type) {
 		case
 			*fiber.Error:
 			{
-				fiberErr := err.(*fiber.Error)
+				fiberErr := errType
 				statusCode = fiberErr.Code
-				switch statusCode {
-				case http.StatusNotFound:
+				if statusCode == http.StatusNotFound {
 					err = errors.NewNotFoundError(common.CommonDomain)
 				}
 			}
@@ -90,9 +91,9 @@ func ErrorHandler(log logger.Logger, environment configs.Environment) fiber.Erro
 		}
 
 		if environment != configs.DevelopmentEnvironment {
-			ctx.Status(statusCode).JSON(errors.TruncateErrorData(errorData))
+			_ = ctx.Status(statusCode).JSON(errors.TruncateErrorData(errorData))
 		} else {
-			ctx.Status(statusCode).JSON(baseError)
+			_ = ctx.Status(statusCode).JSON(baseError)
 		}
 
 		return nil

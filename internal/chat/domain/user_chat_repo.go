@@ -1,8 +1,9 @@
 package domain
 
 import (
-	"chat/internal/common/repository"
 	"context"
+
+	"mbobrovskyi/chat-go/internal/common/repository"
 )
 
 type UserChatRepo interface {

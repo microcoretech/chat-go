@@ -1,14 +1,15 @@
 package repository
 
 import (
-	"chat/internal/chat/common"
-	"chat/internal/chat/domain"
-	"chat/internal/common/errors"
-	"chat/internal/common/repository"
 	"context"
 	"database/sql"
 	"fmt"
 	"strings"
+
+	"mbobrovskyi/chat-go/internal/chat/common"
+	"mbobrovskyi/chat-go/internal/chat/domain"
+	"mbobrovskyi/chat-go/internal/common/errors"
+	"mbobrovskyi/chat-go/internal/common/repository"
 )
 
 type ChatRepoImpl struct {
@@ -68,7 +69,7 @@ func (r *ChatRepoImpl) scan(rows *sql.Rows) ([]domain.Chat, error) {
 			&chat.ID,
 			&chat.Name,
 			&chat.Type,
-			&chat.Image.Url,
+			&chat.Image.URL,
 			&chat.CreatedBy,
 			&chat.CreatedAt,
 			&chat.UpdatedAt,
@@ -145,7 +146,7 @@ func (r *ChatRepoImpl) buildFilter(filter domain.ChatFilter) ([]any, []string) {
 }
 
 func (r *ChatRepoImpl) buildGroupBy() string {
-	return fmt.Sprintf("c.id")
+	return "c.id"
 }
 
 func (r *ChatRepoImpl) GetChat(ctx context.Context, id uint64) (*domain.Chat, error) {
@@ -270,14 +271,14 @@ func (r *ChatRepoImpl) GetChatsCount(ctx context.Context, filter *domain.ChatFil
 }
 
 func (r *ChatRepoImpl) CreateChat(ctx context.Context, chat domain.Chat, tx repository.Tx) (*domain.Chat, error) {
-	var imageUrl string
+	var imageURL string
 
 	var err error
 
 	values := []any{
 		chat.Name,
 		chat.Type,
-		imageUrl,
+		imageURL,
 		chat.CreatedBy,
 	}
 
@@ -327,12 +328,12 @@ func (r *ChatRepoImpl) CreateChat(ctx context.Context, chat domain.Chat, tx repo
 }
 
 func (r *ChatRepoImpl) UpdateChat(ctx context.Context, chat domain.Chat) (*domain.Chat, error) {
-	//TODO implement me
+	// TODO implement me
 	panic("implement me")
 }
 
 func (r *ChatRepoImpl) DeleteChat(ctx context.Context, id uint64) (bool, error) {
-	//TODO implement me
+	// TODO implement me
 	panic("implement me")
 }
 

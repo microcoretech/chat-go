@@ -1,7 +1,7 @@
 package errors
 
 import (
-	"chat/internal/common/common"
+	"mbobrovskyi/chat-go/internal/common/common"
 )
 
 const UnauthorizedErrorType = "UnauthorizedError"

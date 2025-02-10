@@ -1,8 +1,9 @@
 package logrus
 
 import (
-	"chat/internal/infrastructure/logger"
 	"github.com/sirupsen/logrus"
+
+	"mbobrovskyi/chat-go/internal/infrastructure/logger"
 )
 
 func NewLogger(lvl logger.Level) (*logrus.Logger, error) {

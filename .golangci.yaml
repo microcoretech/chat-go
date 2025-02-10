@@ -1,0 +1,71 @@
+# golangci-lint configuration file
+# see: https://golangci-lint.run/usage/configuration/
+
+# Settings of specific linters
+linters-settings:
+  gocritic:
+    enabled-checks:
+      - dupImport
+      - stringsCompare
+    disabled-checks:
+      - appendAssign
+      - exitAfterDefer
+  govet:
+    enable:
+      - nilness
+  gci:
+    sections:
+      - standard # Standard section: captures all standard packages.
+      - default # Default section: contains all imports that could not be matched to another section type.
+      - prefix(mbobrovskyi/chat-go) # Custom section: groups all imports with the specified Prefix.
+      - blank # Blank section: contains all blank imports. This section is not present unless explicitly enabled.
+      - dot # Dot section: contains all dot imports.
+    skip-generated: true # Skip generated files.
+  nolintlint:
+    # Require nolint directives to mention the specific linter being suppressed.
+    require-specific: true
+    # Require an explanation after each nolint directive.
+    require-explanation: true
+  perfsprint:
+    int-conversion: false
+    errorf: true
+    sprintf1: false
+    strconcat: false
+  revive:
+    enable-all-rules: false
+    rules:
+      - name: context-as-argument
+      - name: empty-lines
+      - name: increment-decrement
+      - name: var-naming
+      - name: redundant-import-alias
+
+# Settings for enabling and disabling linters
+linters:
+  enable:
+    - copyloopvar
+    - dupword
+    - durationcheck
+    - fatcontext
+    - gci
+    - ginkgolinter
+    - gocritic
+    - govet
+    - loggercheck
+    - misspell
+    - nolintlint
+    - perfsprint
+    - revive
+    - unconvert
+    - makezero
+
+# Settings related to issues
+issues:
+  # Which dirs to exclude: issues from them won't be reported
+  exclude-dirs:
+    - bin
+    - vendor
+  # Show all issues from a linter
+  max-issues-per-linter: 0
+  # Show all issues with the same text
+  max-same-issues: 0

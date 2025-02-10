@@ -1,13 +1,14 @@
 package connector
 
 import (
-	"chat/internal/infrastructure/logger"
 	"context"
 	"encoding/json"
 	"errors"
 	"runtime/debug"
 	"sync"
 	"time"
+
+	"mbobrovskyi/chat-go/internal/infrastructure/logger"
 )
 
 var ConnectorAlreadyStarted = errors.New("connector already started")

@@ -1,15 +1,17 @@
 package http
 
 import (
-	"chat/internal/common/domain"
-	"chat/internal/common/errors"
-	"chat/internal/common/http"
-	"chat/internal/infrastructure/validator"
-	"chat/internal/user/common"
-	usererrors "chat/internal/user/errors"
+	"strconv"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/samber/lo"
-	"strconv"
+
+	"mbobrovskyi/chat-go/internal/common/domain"
+	"mbobrovskyi/chat-go/internal/common/errors"
+	"mbobrovskyi/chat-go/internal/common/http"
+	"mbobrovskyi/chat-go/internal/infrastructure/validator"
+	"mbobrovskyi/chat-go/internal/user/common"
+	usererrors "mbobrovskyi/chat-go/internal/user/errors"
 )
 
 type UserController struct {

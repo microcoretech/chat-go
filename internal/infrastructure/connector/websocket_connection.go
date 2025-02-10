@@ -1,10 +1,12 @@
 package connector
 
 import (
-	"chat/internal/common/domain"
 	"encoding/json"
+
 	"github.com/fasthttp/websocket"
 	"github.com/google/uuid"
+
+	"mbobrovskyi/chat-go/internal/common/domain"
 )
 
 type WebsocketConnection struct {
@@ -57,7 +59,10 @@ func (c *WebsocketConnection) SendEvent(eventType uint64, data any) error {
 		return err
 	}
 
-	c.conn.WriteJSON(event)
+	err = c.conn.WriteJSON(event)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

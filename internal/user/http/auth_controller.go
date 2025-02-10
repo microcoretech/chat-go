@@ -1,12 +1,13 @@
 package http
 
 import (
-	"chat/internal/common/domain"
-	"chat/internal/common/errors"
-	"chat/internal/infrastructure/api"
-	"chat/internal/infrastructure/validator"
-	"chat/internal/user/common"
 	"github.com/gofiber/fiber/v2"
+
+	"mbobrovskyi/chat-go/internal/common/domain"
+	"mbobrovskyi/chat-go/internal/common/errors"
+	"mbobrovskyi/chat-go/internal/infrastructure/api"
+	"mbobrovskyi/chat-go/internal/infrastructure/validator"
+	"mbobrovskyi/chat-go/internal/user/common"
 )
 
 type AuthController struct {

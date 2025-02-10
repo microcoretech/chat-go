@@ -1,8 +1,9 @@
 package domain
 
 import (
-	"chat/internal/common/domain"
 	"context"
+
+	"mbobrovskyi/chat-go/internal/common/domain"
 )
 
 type MessageServiceImpl struct {

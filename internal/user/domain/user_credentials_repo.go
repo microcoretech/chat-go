@@ -1,8 +1,9 @@
 package domain
 
 import (
-	common_repo "chat/internal/common/repository"
 	"context"
+
+	common_repo "mbobrovskyi/chat-go/internal/common/repository"
 )
 
 type UserCredentialsRepo interface {
