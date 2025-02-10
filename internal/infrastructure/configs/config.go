@@ -1,7 +1,7 @@
 package configs
 
 import (
-	"github.com/caarlos0/env/v8"
+	"github.com/caarlos0/env/v11"
 	"github.com/joho/godotenv"
 )
 
