@@ -17,13 +17,12 @@ package api
 import (
 	"context"
 	"errors"
-	"log"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	fiberCors "github.com/gofiber/fiber/v2/middleware/cors"
-	fiberLogger "github.com/gofiber/fiber/v2/middleware/logger"
-	fiberRecover "github.com/gofiber/fiber/v2/middleware/recover"
+	fibercors "github.com/gofiber/fiber/v2/middleware/cors"
+	fiberlogger "github.com/gofiber/fiber/v2/middleware/logger"
+	fiberrecover "github.com/gofiber/fiber/v2/middleware/recover"
 
 	"mbobrovskyi/chat-go/internal/infrastructure/configs"
 	"mbobrovskyi/chat-go/internal/infrastructure/logger"
@@ -58,15 +57,14 @@ func (s *httpServerImpl) init() {
 		ErrorHandler: ErrorHandler(s.log, s.cfg.Environment),
 	})
 
-	app.Use(fiberLogger.New(fiberLogger.Config{
+	app.Use(fiberlogger.New(fiberlogger.Config{
 		TimeFormat: time.DateTime,
-		Format:     "[${time}] ${status} - ${latency} ${method} ${url}\n",
-		Output:     log.Writer(),
+		Format:     "{\"status\":${status},\"latency\":\"${latency}\",\"method\":\"${method}\",\"url\":\"${url}\",\"ip\":\"${ip}\"}\n",
+		Output:     s.log.Writer(),
 	}))
 
-	app.Use(fiberCors.New())
-
-	app.Use(fiberRecover.New())
+	app.Use(fibercors.New())
+	app.Use(fiberrecover.New())
 
 	app.Get("/", HealthHandler(s.version))
 
