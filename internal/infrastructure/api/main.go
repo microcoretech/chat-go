@@ -24,8 +24,8 @@ import (
 	fiberlogger "github.com/gofiber/fiber/v2/middleware/logger"
 	fiberrecover "github.com/gofiber/fiber/v2/middleware/recover"
 
-	"mbobrovskyi/chat-go/internal/infrastructure/configs"
-	"mbobrovskyi/chat-go/internal/infrastructure/logger"
+	"chat-go/internal/infrastructure/configs"
+	"chat-go/internal/infrastructure/logger"
 )
 
 var (
@@ -37,9 +37,8 @@ type Server interface {
 }
 
 type httpServerImpl struct {
-	log     logger.Logger
-	cfg     *configs.Config
-	version string
+	log logger.Logger
+	cfg *configs.Config
 
 	app *fiber.App
 
@@ -66,7 +65,8 @@ func (s *httpServerImpl) init() {
 	app.Use(fibercors.New())
 	app.Use(fiberrecover.New())
 
-	app.Get("/", HealthHandler(s.version))
+	app.Get("/", rootHandler(s.cfg))
+	app.Get("/healthz", healthzHandler)
 
 	auth := app.Group("/auth")
 	s.authController.SetupRoutes(auth)
@@ -105,7 +105,6 @@ func (s *httpServerImpl) Start(ctx context.Context) error {
 func NewServer(
 	cfg *configs.Config,
 	log logger.Logger,
-	version string,
 	authMiddleware Middleware,
 	authController Controller,
 	userController Controller,
@@ -114,7 +113,6 @@ func NewServer(
 	s := &httpServerImpl{
 		cfg:            cfg,
 		log:            log,
-		version:        version,
 		authMiddleware: authMiddleware,
 		authController: authController,
 		userController: userController,

@@ -17,7 +17,7 @@ package domain
 import (
 	"golang.org/x/exp/slices"
 
-	"mbobrovskyi/chat-go/internal/chat/errors"
+	"chat-go/internal/chat/errors"
 )
 
 type ChatType uint8

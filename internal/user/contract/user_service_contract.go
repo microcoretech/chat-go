@@ -17,7 +17,7 @@ package contract
 import (
 	"context"
 
-	"mbobrovskyi/chat-go/internal/common/domain"
+	"chat-go/internal/common/domain"
 )
 
 type UserServiceContractImpl struct {

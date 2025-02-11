@@ -17,7 +17,7 @@ package http
 import (
 	"context"
 
-	"mbobrovskyi/chat-go/internal/chat/domain"
+	"chat-go/internal/chat/domain"
 )
 
 type MessageService interface {

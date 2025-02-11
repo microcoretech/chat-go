@@ -18,7 +18,7 @@ import (
 	"context"
 	"time"
 
-	"mbobrovskyi/chat-go/internal/common/domain"
+	"chat-go/internal/common/domain"
 )
 
 type SessionRepository interface {

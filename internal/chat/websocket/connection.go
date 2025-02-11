@@ -18,8 +18,8 @@ import (
 	"github.com/fasthttp/websocket"
 	"golang.org/x/exp/slices"
 
-	"mbobrovskyi/chat-go/internal/common/domain"
-	"mbobrovskyi/chat-go/internal/infrastructure/connector"
+	"chat-go/internal/common/domain"
+	"chat-go/internal/infrastructure/connector"
 )
 
 type Connection interface {

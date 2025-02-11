@@ -17,11 +17,11 @@ package http
 import (
 	"github.com/gofiber/fiber/v2"
 
-	"mbobrovskyi/chat-go/internal/common/domain"
-	"mbobrovskyi/chat-go/internal/common/errors"
-	"mbobrovskyi/chat-go/internal/infrastructure/api"
-	"mbobrovskyi/chat-go/internal/infrastructure/validator"
-	"mbobrovskyi/chat-go/internal/user/common"
+	"chat-go/internal/common/domain"
+	"chat-go/internal/common/errors"
+	"chat-go/internal/infrastructure/api"
+	"chat-go/internal/infrastructure/validator"
+	"chat-go/internal/user/common"
 )
 
 type AuthController struct {

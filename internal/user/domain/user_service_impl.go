@@ -17,9 +17,9 @@ package domain
 import (
 	"context"
 
-	"mbobrovskyi/chat-go/internal/common/domain"
-	"mbobrovskyi/chat-go/internal/common/repository"
-	"mbobrovskyi/chat-go/internal/user/errors"
+	"chat-go/internal/common/domain"
+	"chat-go/internal/common/repository"
+	"chat-go/internal/user/errors"
 )
 
 type UserServiceImpl struct {

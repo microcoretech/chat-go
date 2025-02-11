@@ -19,7 +19,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"mbobrovskyi/chat-go/internal/common/errors"
+	"chat-go/internal/common/errors"
 )
 
 const (

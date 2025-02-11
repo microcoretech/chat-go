@@ -18,8 +18,8 @@ import (
 	"context"
 	"encoding/json"
 
-	"mbobrovskyi/chat-go/internal/chat/common"
-	"mbobrovskyi/chat-go/internal/chat/domain"
+	"chat-go/internal/chat/common"
+	"chat-go/internal/chat/domain"
 )
 
 func (e *EventHandler) updateMessagesStatusHandler(conn Connection, rawData []byte) error {

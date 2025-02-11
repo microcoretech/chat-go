@@ -20,7 +20,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 
-	"mbobrovskyi/chat-go/internal/common/errors"
+	"chat-go/internal/common/errors"
 )
 
 type Validate interface {

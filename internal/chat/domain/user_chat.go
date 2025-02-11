@@ -14,7 +14,7 @@
 
 package domain
 
-import "mbobrovskyi/chat-go/internal/common/domain"
+import "chat-go/internal/common/domain"
 
 type UserChat struct {
 	UserID uint64 `json:"userId"`

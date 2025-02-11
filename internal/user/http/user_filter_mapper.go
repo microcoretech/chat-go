@@ -15,10 +15,10 @@
 package http
 
 import (
-	"mbobrovskyi/chat-go/internal/common/domain"
-	"mbobrovskyi/chat-go/internal/common/errors"
-	"mbobrovskyi/chat-go/internal/common/http"
-	"mbobrovskyi/chat-go/internal/user/common"
+	"chat-go/internal/common/domain"
+	"chat-go/internal/common/errors"
+	"chat-go/internal/common/http"
+	"chat-go/internal/user/common"
 )
 
 var userSortFields = []string{

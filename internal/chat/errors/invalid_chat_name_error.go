@@ -15,8 +15,8 @@
 package errors
 
 import (
-	"mbobrovskyi/chat-go/internal/chat/common"
-	"mbobrovskyi/chat-go/internal/common/errors"
+	"chat-go/internal/chat/common"
+	"chat-go/internal/common/errors"
 )
 
 const InvalidChatNameErrorType = "InvalidChatNameError"

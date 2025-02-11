@@ -15,6 +15,9 @@
 package configs
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/caarlos0/env/v11"
 	"github.com/joho/godotenv"
 )
@@ -29,6 +32,8 @@ type Config struct {
 	RedisAddr     string `env:"REDIS_ADDR" envDefault:"localhost:6379"`
 	RedisPassword string `env:"REDIS_PASSWORD"`
 	RedisDb       int    `env:"REDIS_DB"`
+
+	Version string
 }
 
 func NewConfig() (*Config, error) {
@@ -38,6 +43,13 @@ func NewConfig() (*Config, error) {
 	if err := env.Parse(c); err != nil {
 		return nil, err
 	}
+
+	fileVersion, err := os.ReadFile("VERSION")
+	if err != nil {
+		return nil, fmt.Errorf("error on reading VERSION file: %w", err)
+	}
+
+	c.Version = string(fileVersion)
 
 	return c, nil
 }

@@ -17,7 +17,7 @@ package domain
 import (
 	"time"
 
-	"mbobrovskyi/chat-go/internal/common/domain"
+	"chat-go/internal/common/domain"
 )
 
 type Chat struct {
