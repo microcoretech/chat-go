@@ -9,15 +9,9 @@
 .vscode
 .DS_Store
 
-vendor/
-
 .env
 !.env.example
-tmp/
 
-# Go stuff
-go.work
-go.work.sum
-
+artifacts/
 bin/
-bin/*
+tmp/

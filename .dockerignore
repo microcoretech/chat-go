@@ -6,17 +6,23 @@
 
 # IDE config files
 .idea
+.github
 .vscode
 .DS_Store
 
-vendor/
+docs/
+hack/
+migrations/
 
 .env*
 .gitignore
-.gitlab-ci.yml
+.golangci.yaml
 
 Dockerfile
+LICENSE
+Makefile
 README.md
 
+artifacts/
+bin/
 tmp/
-migrations/
