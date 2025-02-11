@@ -13,7 +13,21 @@
 # limitations under the License.
 
 PROJECT_DIR := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
+BIN_DIR ?= $(PROJECT_DIR)/bin
+ARTIFACTS ?= $(PROJECT_DIR)/bin
 TOOLS_DIR := $(PROJECT_DIR)/hack/tools
+
+GIT_TAG ?= $(shell git describe --tags --dirty --always)
+
+BINARY ?= chat-go
+DOCKER_BUILDX_CMD ?= docker buildx
+IMAGE_BUILD_CMD ?= $(DOCKER_BUILDX_CMD) build
+IMAGE_BUILD_EXTRA_OPTS ?=
+IMAGE_REGISTRY ?= mykhailobobrovskyi
+IMAGE_NAME ?= chat-go
+IMAGE_REPO ?= $(IMAGE_REGISTRY)/$(IMAGE_NAME)
+IMAGE_TAG ?= $(IMAGE_REPO):$(GIT_TAG)
+PLATFORMS ?= linux/amd64,linux/arm64
 
 GO_CMD ?= go
 
@@ -43,6 +57,23 @@ lint-fix: golangci-lint
 .PHONY: gomod-download
 gomod-download:
 	$(GO_CMD) mod download
+
+##@ Build
+
+.PHONY: build
+build: # Build chat
+	$(GO_CMD) build -o $(BIN_DIR)/$(BINARY) ./cmd/chat
+
+.PHONY: image-build
+image-build: # Docker build
+	$(IMAGE_BUILD_CMD) -t $(IMAGE_TAG) \
+		--platform=$(PLATFORMS) \
+		$(PUSH) \
+		$(IMAGE_BUILD_EXTRA_OPTS) ./
+
+.PHONY: image-push
+image-push: PUSH=--push
+image-push: image-build
 
 ##@ Tools
 GOLANGCI_LINT = $(PROJECT_DIR)/bin/golangci-lint
