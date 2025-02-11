@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM golang:1.21-alpine as builder
+FROM golang:1.23-alpine AS builder
 
 RUN apk --no-cache add ca-certificates git
 
-WORKDIR /go/src/gitlab.com/chat605743/backend
+WORKDIR /go/src/chat-go
 
 COPY go.mod .
 COPY go.sum .
@@ -25,11 +25,10 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o ./app ./cmd/backend \
-    && chmod +x ./app
+RUN go build -o ./bin/chat-go ./cmd/chat
 
-FROM alpine
+FROM scratch
 WORKDIR /
-COPY --from=builder /go/src/gitlab.com/chat605743/backend/app .
+COPY --from=builder /go/src/chat-go/bin/chat-go /bin/chat-go
 COPY /VERSION .
-ENTRYPOINT ["./app"]
+ENTRYPOINT ["/bin/chat-go"]
