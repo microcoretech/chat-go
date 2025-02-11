@@ -17,7 +17,7 @@ package http
 import (
 	"time"
 
-	"mbobrovskyi/chat-go/internal/common/domain"
+	"chat-go/internal/common/domain"
 )
 
 type UserDto struct {

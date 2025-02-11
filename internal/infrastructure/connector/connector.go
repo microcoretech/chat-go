@@ -22,7 +22,7 @@ import (
 	"sync"
 	"time"
 
-	"mbobrovskyi/chat-go/internal/infrastructure/logger"
+	"chat-go/internal/infrastructure/logger"
 )
 
 var ConnectorAlreadyStarted = errors.New("connector already started")

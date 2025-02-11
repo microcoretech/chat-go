@@ -12,18 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package http
+package api
 
 import (
-	"chat-go/internal/common/domain"
+	"github.com/gofiber/fiber/v2"
+
+	"chat-go/internal/common/common"
+	"chat-go/internal/infrastructure/configs"
 )
 
-func UserFromSignUpRequest(req SignUpRequest) domain.User {
-	return domain.User{
-		Email:     req.Email,
-		Username:  req.Username,
-		Role:      domain.UserRole,
-		FirstName: req.FirstName,
-		LastName:  req.LastName,
+type RootResponse struct {
+	Service string `json:"service"`
+	Version string `json:"version"`
+}
+
+func rootHandler(cfg *configs.Config) func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		return c.JSON(&RootResponse{
+			Service: common.ServiceName,
+			Version: cfg.Version,
+		})
 	}
 }

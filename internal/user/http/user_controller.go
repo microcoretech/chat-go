@@ -20,12 +20,12 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/samber/lo"
 
-	"mbobrovskyi/chat-go/internal/common/domain"
-	"mbobrovskyi/chat-go/internal/common/errors"
-	"mbobrovskyi/chat-go/internal/common/http"
-	"mbobrovskyi/chat-go/internal/infrastructure/validator"
-	"mbobrovskyi/chat-go/internal/user/common"
-	usererrors "mbobrovskyi/chat-go/internal/user/errors"
+	"chat-go/internal/common/domain"
+	"chat-go/internal/common/errors"
+	"chat-go/internal/common/http"
+	"chat-go/internal/infrastructure/validator"
+	"chat-go/internal/user/common"
+	usererrors "chat-go/internal/user/errors"
 )
 
 type UserController struct {

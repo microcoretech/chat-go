@@ -15,8 +15,8 @@
 package errors
 
 import (
-	"mbobrovskyi/chat-go/internal/common/errors"
-	"mbobrovskyi/chat-go/internal/user/common"
+	"chat-go/internal/common/errors"
+	"chat-go/internal/user/common"
 )
 
 const UserNotCreatedErrorType = "UserNotCreatedError"

@@ -20,7 +20,7 @@ import (
 	"github.com/fasthttp/websocket"
 	"github.com/google/uuid"
 
-	"mbobrovskyi/chat-go/internal/common/domain"
+	"chat-go/internal/common/domain"
 )
 
 type WebsocketConnection struct {

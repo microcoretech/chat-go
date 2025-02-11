@@ -19,10 +19,10 @@ import (
 	"database/sql"
 	"fmt"
 
-	"mbobrovskyi/chat-go/internal/common/errors"
-	common_repo "mbobrovskyi/chat-go/internal/common/repository"
-	"mbobrovskyi/chat-go/internal/user/common"
-	"mbobrovskyi/chat-go/internal/user/domain"
+	"chat-go/internal/common/errors"
+	common_repo "chat-go/internal/common/repository"
+	"chat-go/internal/user/common"
+	"chat-go/internal/user/domain"
 )
 
 type UserCredentialsRepoImpl struct {

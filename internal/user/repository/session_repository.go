@@ -23,9 +23,9 @@ import (
 
 	"github.com/redis/go-redis/v9"
 
-	"mbobrovskyi/chat-go/internal/common/domain"
-	commonerrors "mbobrovskyi/chat-go/internal/common/errors"
-	"mbobrovskyi/chat-go/internal/user/common"
+	"chat-go/internal/common/domain"
+	commonerrors "chat-go/internal/common/errors"
+	"chat-go/internal/user/common"
 )
 
 type SessionRepository struct {

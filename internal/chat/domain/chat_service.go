@@ -19,11 +19,11 @@ import (
 
 	"golang.org/x/exp/maps"
 
-	"mbobrovskyi/chat-go/internal/chat/common"
-	chaterrors "mbobrovskyi/chat-go/internal/chat/errors"
-	"mbobrovskyi/chat-go/internal/common/domain"
-	"mbobrovskyi/chat-go/internal/common/errors"
-	"mbobrovskyi/chat-go/internal/common/repository"
+	"chat-go/internal/chat/common"
+	chaterrors "chat-go/internal/chat/errors"
+	"chat-go/internal/common/domain"
+	"chat-go/internal/common/errors"
+	"chat-go/internal/common/repository"
 )
 
 type ChatServiceImpl struct {

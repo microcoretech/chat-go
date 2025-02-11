@@ -15,7 +15,7 @@
 package http
 
 import (
-	"mbobrovskyi/chat-go/internal/common/domain"
+	"chat-go/internal/common/domain"
 )
 
 func UserToDto(user domain.User) UserDto {

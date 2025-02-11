@@ -17,7 +17,7 @@ package websocket
 import (
 	"time"
 
-	"mbobrovskyi/chat-go/internal/common/http"
+	"chat-go/internal/common/http"
 )
 
 type MessageDto struct {

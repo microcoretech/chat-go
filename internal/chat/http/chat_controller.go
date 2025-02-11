@@ -21,14 +21,14 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/samber/lo"
 
-	"mbobrovskyi/chat-go/internal/chat/common"
-	chatdomain "mbobrovskyi/chat-go/internal/chat/domain"
-	chatwebsocket "mbobrovskyi/chat-go/internal/chat/websocket"
-	"mbobrovskyi/chat-go/internal/common/domain"
-	"mbobrovskyi/chat-go/internal/common/errors"
-	"mbobrovskyi/chat-go/internal/common/http"
-	"mbobrovskyi/chat-go/internal/infrastructure/connector"
-	"mbobrovskyi/chat-go/internal/infrastructure/validator"
+	"chat-go/internal/chat/common"
+	chatdomain "chat-go/internal/chat/domain"
+	chatwebsocket "chat-go/internal/chat/websocket"
+	"chat-go/internal/common/domain"
+	"chat-go/internal/common/errors"
+	"chat-go/internal/common/http"
+	"chat-go/internal/infrastructure/connector"
+	"chat-go/internal/infrastructure/validator"
 )
 
 type ChatController struct {

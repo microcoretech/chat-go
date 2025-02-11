@@ -22,10 +22,10 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 
-	"mbobrovskyi/chat-go/internal/common/domain"
-	"mbobrovskyi/chat-go/internal/common/errors"
-	"mbobrovskyi/chat-go/internal/common/repository"
-	usererrors "mbobrovskyi/chat-go/internal/user/errors"
+	"chat-go/internal/common/domain"
+	"chat-go/internal/common/errors"
+	"chat-go/internal/common/repository"
+	usererrors "chat-go/internal/user/errors"
 )
 
 type AuthServiceImpl struct {

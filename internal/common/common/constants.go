@@ -14,4 +14,7 @@
 
 package common
 
-const CommonDomain = "common"
+const (
+	ServiceName  = "chat-go"
+	CommonDomain = "common"
+)

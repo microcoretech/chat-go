@@ -23,22 +23,22 @@ import (
 
 	"golang.org/x/sync/errgroup"
 
-	chatdomain "mbobrovskyi/chat-go/internal/chat/domain"
-	chathttp "mbobrovskyi/chat-go/internal/chat/http"
-	chatrepository "mbobrovskyi/chat-go/internal/chat/repository"
-	chatwebsocket "mbobrovskyi/chat-go/internal/chat/websocket"
-	"mbobrovskyi/chat-go/internal/common/repository"
-	"mbobrovskyi/chat-go/internal/infrastructure/api"
-	"mbobrovskyi/chat-go/internal/infrastructure/configs"
-	"mbobrovskyi/chat-go/internal/infrastructure/connector"
-	"mbobrovskyi/chat-go/internal/infrastructure/database/postgres"
-	"mbobrovskyi/chat-go/internal/infrastructure/database/redis"
-	"mbobrovskyi/chat-go/internal/infrastructure/logger/logrus"
-	"mbobrovskyi/chat-go/internal/infrastructure/validator"
-	usercontract "mbobrovskyi/chat-go/internal/user/contract"
-	userdomain "mbobrovskyi/chat-go/internal/user/domain"
-	userhttp "mbobrovskyi/chat-go/internal/user/http"
-	userrepository "mbobrovskyi/chat-go/internal/user/repository"
+	chatdomain "chat-go/internal/chat/domain"
+	chathttp "chat-go/internal/chat/http"
+	chatrepository "chat-go/internal/chat/repository"
+	chatwebsocket "chat-go/internal/chat/websocket"
+	"chat-go/internal/common/repository"
+	"chat-go/internal/infrastructure/api"
+	"chat-go/internal/infrastructure/configs"
+	"chat-go/internal/infrastructure/connector"
+	"chat-go/internal/infrastructure/database/postgres"
+	"chat-go/internal/infrastructure/database/redis"
+	"chat-go/internal/infrastructure/logger/logrus"
+	"chat-go/internal/infrastructure/validator"
+	usercontract "chat-go/internal/user/contract"
+	userdomain "chat-go/internal/user/domain"
+	userhttp "chat-go/internal/user/http"
+	userrepository "chat-go/internal/user/repository"
 )
 
 func main() {
@@ -46,13 +46,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
-	fileVersion, err := os.ReadFile("VERSION")
-	if err != nil {
-		panic(fmt.Errorf("error on reading VERSION file: %w", err))
-	}
-
-	version := string(fileVersion)
 
 	log, err := logrus.NewLogger(cfg.LogLevel)
 	if err != nil {
@@ -101,15 +94,7 @@ func main() {
 	userController := userhttp.NewUserController(validate, userService)
 	chatController := chathttp.NewChatController(validate, chatService, messageService, connector)
 
-	server := api.NewServer(
-		cfg,
-		log,
-		version,
-		authMiddleware,
-		authController,
-		userController,
-		chatController,
-	)
+	server := api.NewServer(cfg, log, authMiddleware, authController, userController, chatController)
 
 	ctx, cancel = signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM, syscall.SIGQUIT)
 	defer cancel()

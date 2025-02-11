@@ -12,18 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package http
+package util
 
-import (
-	"chat-go/internal/common/domain"
+import "os"
+
+var (
+	ProjectDir = os.Getenv("PROJECT_DIR")
 )
-
-func UserFromSignUpRequest(req SignUpRequest) domain.User {
-	return domain.User{
-		Email:     req.Email,
-		Username:  req.Username,
-		Role:      domain.UserRole,
-		FirstName: req.FirstName,
-		LastName:  req.LastName,
-	}
-}

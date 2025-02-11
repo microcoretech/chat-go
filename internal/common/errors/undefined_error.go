@@ -15,7 +15,7 @@
 package errors
 
 import (
-	"mbobrovskyi/chat-go/internal/common/common"
+	"chat-go/internal/common/common"
 )
 
 const UndefinedErrorType = "UndefinedError"

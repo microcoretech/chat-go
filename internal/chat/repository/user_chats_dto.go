@@ -19,7 +19,7 @@ import (
 	"encoding/json"
 	"errors"
 
-	"mbobrovskyi/chat-go/internal/chat/domain"
+	"chat-go/internal/chat/domain"
 )
 
 type userChatsDto []domain.UserChat

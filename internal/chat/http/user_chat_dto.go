@@ -15,7 +15,7 @@
 package http
 
 import (
-	"mbobrovskyi/chat-go/internal/common/http"
+	"chat-go/internal/common/http"
 )
 
 type UserChatDto struct {

@@ -20,7 +20,7 @@ import (
 
 	"golang.org/x/exp/slices"
 
-	"mbobrovskyi/chat-go/internal/common/domain"
+	"chat-go/internal/common/domain"
 )
 
 func SortFromDto(querySort string, sortFields []string) (*domain.Sort, error) {

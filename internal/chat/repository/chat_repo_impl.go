@@ -20,10 +20,10 @@ import (
 	"fmt"
 	"strings"
 
-	"mbobrovskyi/chat-go/internal/chat/common"
-	"mbobrovskyi/chat-go/internal/chat/domain"
-	"mbobrovskyi/chat-go/internal/common/errors"
-	"mbobrovskyi/chat-go/internal/common/repository"
+	"chat-go/internal/chat/common"
+	"chat-go/internal/chat/domain"
+	"chat-go/internal/common/errors"
+	"chat-go/internal/common/repository"
 )
 
 type ChatRepoImpl struct {

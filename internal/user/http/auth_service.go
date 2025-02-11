@@ -17,8 +17,8 @@ package http
 import (
 	"context"
 
-	"mbobrovskyi/chat-go/internal/common/domain"
-	userdomain "mbobrovskyi/chat-go/internal/user/domain"
+	"chat-go/internal/common/domain"
+	userdomain "chat-go/internal/user/domain"
 )
 
 type AuthService interface {

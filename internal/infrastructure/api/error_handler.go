@@ -21,12 +21,12 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	chaterrors "mbobrovskyi/chat-go/internal/chat/errors"
-	"mbobrovskyi/chat-go/internal/common/common"
-	"mbobrovskyi/chat-go/internal/common/errors"
-	"mbobrovskyi/chat-go/internal/infrastructure/configs"
-	"mbobrovskyi/chat-go/internal/infrastructure/logger"
-	usererrors "mbobrovskyi/chat-go/internal/user/errors"
+	chaterrors "chat-go/internal/chat/errors"
+	"chat-go/internal/common/common"
+	"chat-go/internal/common/errors"
+	"chat-go/internal/infrastructure/configs"
+	"chat-go/internal/infrastructure/logger"
+	usererrors "chat-go/internal/user/errors"
 )
 
 func ErrorHandler(log logger.Logger, environment configs.Environment) fiber.ErrorHandler {
