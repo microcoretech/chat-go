@@ -14,7 +14,14 @@
 
 package util
 
-import "os"
+import (
+	"os"
+)
+
+const (
+	ChatImage  = "chat-go"
+	RedisImage = "redis:7-alpine"
+)
 
 var (
 	ProjectDir = os.Getenv("PROJECT_DIR")

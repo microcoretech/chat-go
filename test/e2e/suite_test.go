@@ -25,17 +25,8 @@ import (
 	"github.com/testcontainers/testcontainers-go/modules/postgres"
 	"github.com/testcontainers/testcontainers-go/modules/redis"
 	"github.com/testcontainers/testcontainers-go/wait"
-)
 
-const (
-	chatImage = "chat-go"
-
-	postgresImage = "postgres:17-alpine"
-	redisImage    = "redis:7-alpine"
-
-	dbName = "test-db"
-	dbUser = "user"
-	dbPass = "password"
+	"chat-go/test/util"
 )
 
 var (
@@ -58,17 +49,17 @@ var _ = ginkgo.BeforeSuite(func() {
 
 	postgresContainer, err = postgres.Run(
 		ctx,
-		postgresImage,
-		postgres.WithDatabase(dbName),
-		postgres.WithUsername(dbUser),
-		postgres.WithPassword(dbPass),
+		util.PostgresImage,
+		postgres.WithDatabase(util.DbName),
+		postgres.WithUsername(util.DbUser),
+		postgres.WithPassword(util.DbPass),
 		testcontainers.WithWaitStrategy(wait.ForListeningPort("5432/tcp")),
 	)
 	gomega.Expect(err).ToNot(gomega.HaveOccurred())
 
 	redisContainer, err = redis.Run(
 		ctx,
-		redisImage,
+		util.RedisImage,
 		testcontainers.WithWaitStrategy(wait.ForListeningPort("6379/tcp")),
 	)
 	gomega.Expect(err).ToNot(gomega.HaveOccurred())
@@ -76,18 +67,21 @@ var _ = ginkgo.BeforeSuite(func() {
 	postgresContainerIP, err := postgresContainer.ContainerIP(ctx)
 	gomega.Expect(err).ToNot(gomega.HaveOccurred())
 
+	err = util.Migrate(ctx, postgresContainer)
+	gomega.Expect(err).ToNot(gomega.HaveOccurred())
+
 	redisContainerIP, err := redisContainer.ContainerIP(ctx)
 	gomega.Expect(err).ToNot(gomega.HaveOccurred())
 
 	chatContainer, err = testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
 		ContainerRequest: testcontainers.ContainerRequest{
-			Image:        chatImage,
+			Image:        util.ChatImage,
 			ExposedPorts: []string{"8080/tcp"},
 			WaitingFor:   wait.ForHTTP("/").WithPort("8080/tcp"),
 			Env: map[string]string{
 				"POSTGRES_URI": fmt.Sprintf(
 					"postgresql://%s:%s@%s:5432/%s?sslmode=disable",
-					dbUser, dbPass, postgresContainerIP, dbName,
+					util.DbUser, util.DbPass, postgresContainerIP, util.DbName,
 				),
 				"REDIS_ADDR": fmt.Sprintf("%s:6379", redisContainerIP),
 			},
