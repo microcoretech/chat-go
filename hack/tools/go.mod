@@ -3,7 +3,7 @@ module chat-go/hack/tools
 go 1.23.0
 
 require (
-	github.com/golangci/golangci-lint v1.64.5
+	github.com/golangci/golangci-lint v1.64.6
 	github.com/onsi/ginkgo/v2 v2.22.2
 )
 
