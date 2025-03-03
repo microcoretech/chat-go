@@ -1,0 +1,40 @@
+[
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/users/current"
+    },
+    "httpResponse": {
+      "headers": {
+        "Content-Type": ["application/json"]
+      },
+      "body": {
+        "id": 1,
+        "email": "admin@gmail.com"
+      },
+      "statusCode": 200
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/users"
+    },
+    "httpResponse": {
+      "headers": {
+        "Content-Type": ["application/json"]
+      },
+      "body": [
+        {
+          "id": 1,
+          "email": "admin@gmail.com"
+        },
+        {
+          "id": 2,
+          "email": "mikhail.bobrovsky@gmail.com"
+        }
+      ],
+      "statusCode": 200
+    }
+  }
+]
