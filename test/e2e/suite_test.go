@@ -19,9 +19,11 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/docker/docker/api/types/container"
 	"github.com/onsi/ginkgo/v2"
 	"github.com/onsi/gomega"
 	"github.com/testcontainers/testcontainers-go"
+	"github.com/testcontainers/testcontainers-go/modules/mockserver"
 	"github.com/testcontainers/testcontainers-go/modules/postgres"
 	"github.com/testcontainers/testcontainers-go/modules/redis"
 	"github.com/testcontainers/testcontainers-go/wait"
@@ -30,9 +32,10 @@ import (
 )
 
 var (
-	postgresContainer *postgres.PostgresContainer
-	redisContainer    *redis.RedisContainer
-	chatContainer     testcontainers.Container
+	postgresContainer   *postgres.PostgresContainer
+	redisContainer      *redis.RedisContainer
+	mockserverContainer *mockserver.MockServerContainer
+	chatContainer       testcontainers.Container
 
 	chatURL string
 )
@@ -64,6 +67,22 @@ var _ = ginkgo.BeforeSuite(func() {
 	)
 	gomega.Expect(err).ToNot(gomega.HaveOccurred())
 
+	mockserverSpecPath, err := util.GetMockserverSpecPath()
+	gomega.Expect(err).ToNot(gomega.HaveOccurred())
+
+	mockserverContainer, err = mockserver.Run(
+		ctx,
+		util.MockServerImage,
+		testcontainers.WithWaitStrategy(wait.ForLog("INFO 1080 started on port: 1080")),
+		testcontainers.WithEnv(map[string]string{
+			"MOCKSERVER_INITIALIZATION_JSON_PATH": "/config/spec.json",
+		}),
+		testcontainers.WithHostConfigModifier(func(hostConfig *container.HostConfig) {
+			hostConfig.Binds = append(hostConfig.Binds, fmt.Sprintf("%s:/config/spec.json", mockserverSpecPath))
+		}),
+	)
+	gomega.Expect(err).ToNot(gomega.HaveOccurred())
+
 	postgresContainerIP, err := postgresContainer.ContainerIP(ctx)
 	gomega.Expect(err).ToNot(gomega.HaveOccurred())
 
@@ -71,6 +90,9 @@ var _ = ginkgo.BeforeSuite(func() {
 	gomega.Expect(err).ToNot(gomega.HaveOccurred())
 
 	redisContainerIP, err := redisContainer.ContainerIP(ctx)
+	gomega.Expect(err).ToNot(gomega.HaveOccurred())
+
+	mockserverContainerIP, err := mockserverContainer.ContainerIP(ctx)
 	gomega.Expect(err).ToNot(gomega.HaveOccurred())
 
 	chatContainer, err = testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
@@ -83,7 +105,9 @@ var _ = ginkgo.BeforeSuite(func() {
 					"postgresql://%s:%s@%s:5432/%s?sslmode=disable",
 					util.DbUser, util.DbPass, postgresContainerIP, util.DbName,
 				),
-				"REDIS_ADDR": fmt.Sprintf("%s:6379", redisContainerIP),
+				"REDIS_ADDR":                fmt.Sprintf("%s:6379", redisContainerIP),
+				"GET_CURRENT_USER_ENDPOINT": fmt.Sprintf("http://%s:1080/users/current", mockserverContainerIP),
+				"GET_USERS_ENDPOINT":        fmt.Sprintf("http://%s:1080/users", mockserverContainerIP),
 			},
 		},
 		Started: true,
@@ -101,6 +125,7 @@ var _ = ginkgo.BeforeSuite(func() {
 
 var _ = ginkgo.AfterSuite(func() {
 	gomega.Expect(testcontainers.TerminateContainer(chatContainer)).To(gomega.Succeed())
+	gomega.Expect(testcontainers.TerminateContainer(mockserverContainer)).To(gomega.Succeed())
 	gomega.Expect(testcontainers.TerminateContainer(postgresContainer)).To(gomega.Succeed())
 	gomega.Expect(testcontainers.TerminateContainer(redisContainer)).To(gomega.Succeed())
 })

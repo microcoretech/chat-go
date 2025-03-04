@@ -69,8 +69,8 @@ func (c *connectionImpl) IsCurrentChat(chatID uint64) bool {
 	return *c.GetCurrentChat() == chatID
 }
 
-func NewConnection(conn *websocket.Conn, session *domain.Session) connector.Connection {
+func NewConnection(conn *websocket.Conn, user *domain.User) connector.Connection {
 	return &connectionImpl{
-		Connection: connector.NewWebSocketConnection(conn, session),
+		Connection: connector.NewWebSocketConnection(conn, user),
 	}
 }

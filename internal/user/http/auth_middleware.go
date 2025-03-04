@@ -29,7 +29,7 @@ const (
 )
 
 type AuthMiddleware struct {
-	authService AuthService
+	userService UserService
 }
 
 func (m *AuthMiddleware) Handler(ctx *fiber.Ctx) error {
@@ -54,17 +54,18 @@ func (m *AuthMiddleware) Handler(ctx *fiber.Ctx) error {
 		return errors.NewUnauthorizedError("invalid token")
 	}
 
-	session, err := m.authService.GetSession(ctx.Context(), authToken)
+	ctx.Context().SetUserValue("token", authToken)
+
+	user, err := m.userService.GetCurrentUser(ctx.Context())
 	if err != nil {
 		return err
 	}
 
-	if session == nil {
-		return errors.NewUnauthorizedError("no session found")
+	if user == nil || user.ID == 0 {
+		return errors.NewUnauthorizedError("user not found")
 	}
 
-	ctx.Context().SetUserValue("token", authToken)
-	ctx.Context().SetUserValue("session", session)
+	ctx.Context().SetUserValue("user", user)
 
 	return ctx.Next()
 }
@@ -95,8 +96,8 @@ func (m *AuthMiddleware) getTokenFromHeader(ctx *fiber.Ctx) (string, error) {
 	return authToken, nil
 }
 
-func NewAuthMiddleware(authService AuthService) *AuthMiddleware {
+func NewAuthMiddleware(userService UserService) *AuthMiddleware {
 	return &AuthMiddleware{
-		authService: authService,
+		userService: userService,
 	}
 }

@@ -13,6 +13,8 @@
 docs/
 hack/
 migrations/
+mockserver/
+test/
 
 .env*
 .gitignore

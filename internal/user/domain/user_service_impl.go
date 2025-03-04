@@ -16,59 +16,145 @@ package domain
 
 import (
 	"context"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"io"
+	"net/http"
+	"strconv"
+
+	"github.com/samber/lo"
 
 	"chat-go/internal/common/domain"
-	"chat-go/internal/common/repository"
-	"chat-go/internal/user/errors"
+	commonerrors "chat-go/internal/common/errors"
+	commonhttp "chat-go/internal/common/http"
+	"chat-go/internal/infrastructure/configs"
+	"chat-go/internal/user/common"
 )
 
 type UserServiceImpl struct {
-	baseRepo            repository.BaseRepo
-	userRepo            UserRepo
-	userCredentialsRepo UserCredentialsRepo
+	config *configs.Config
 }
 
-func (s *UserServiceImpl) GetUser(ctx context.Context, id uint64) (*domain.User, error) {
-	user, err := s.userRepo.GetUser(ctx, id)
+func (s *UserServiceImpl) GetCurrentUser(ctx context.Context) (*domain.User, error) {
+	client := &http.Client{}
+
+	req, err := http.NewRequest("GET", s.config.GetCurrentUserEndpoint, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	if user == nil {
-		return nil, errors.NewUserNotFoundError(map[string]any{"id": id})
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", ctx.Value("token").(string)))
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	switch resp.StatusCode {
+	case http.StatusUnauthorized:
+		return nil, commonerrors.NewUnauthorizedError()
+	case http.StatusNotFound:
+		return nil, commonerrors.NewUndefinedError(
+			errors.New("invalid get current user endpoint"),
+			"endpoint", s.config.GetCurrentUserEndpoint,
+		)
 	}
 
-	return user, nil
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	userDto := commonhttp.UserDto{}
+	err = json.Unmarshal(body, &userDto)
+	if err != nil {
+		return nil, err
+	}
+
+	if userDto.ID == 0 {
+		return nil, commonerrors.NewUnauthorizedError()
+	}
+
+	return lo.ToPtr(commonhttp.UserFromDto(userDto)), nil
 }
 
 func (s *UserServiceImpl) GetUsers(ctx context.Context, filter *domain.UserFilter) ([]domain.User, uint64, error) {
-	count, err := s.userRepo.GetUsersCount(ctx, filter)
+	client := &http.Client{}
+
+	req, err := http.NewRequest("GET", s.config.GetUsersEndpoint, nil)
 	if err != nil {
 		return nil, 0, err
 	}
 
-	if count == 0 {
-		return make([]domain.User, 0), count, nil
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", ctx.Value("token").(string)))
+
+	q := req.URL.Query()
+
+	for _, id := range filter.IDs {
+		q.Add("ids", strconv.FormatUint(id, 10))
 	}
 
-	users, err := s.userRepo.GetUsers(ctx, filter)
+	for _, email := range filter.Emails {
+		q.Add("emails", email)
+	}
+
+	for _, username := range filter.Usernames {
+		q.Add("usernames", username)
+	}
+
+	if filter.Search != "" {
+		q.Add("search", filter.Search)
+	}
+
+	if filter.Limit != nil {
+		q.Add("limit", fmt.Sprint(filter.Limit))
+	}
+
+	if filter.Offset != nil {
+		q.Add("offset", fmt.Sprint(filter.Offset))
+	}
+
+	if filter.Sort != nil {
+		q.Add("sort", fmt.Sprintf("%s,%s", filter.Sort.SortBy, filter.Sort.SortDir.String()))
+	}
+
+	req.URL.RawQuery = q.Encode()
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, 0, err
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, 0, err
 	}
 
-	return users, count, nil
+	switch resp.StatusCode {
+	case http.StatusBadRequest:
+		return nil, 0, commonerrors.NewBadRequestError(common.UserDomain, nil, map[string]any{
+			"body": string(body),
+		})
+	case http.StatusUnauthorized:
+		return nil, 0, commonerrors.NewUnauthorizedError()
+	}
+
+	pageDto := &commonhttp.Page[commonhttp.UserDto]{}
+	err = json.Unmarshal(body, pageDto)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return lo.Map(pageDto.Items, func(userDto commonhttp.UserDto, _ int) domain.User {
+		return commonhttp.UserFromDto(userDto)
+	}), pageDto.Count, nil
 }
 
-func (s *UserServiceImpl) GetUserCredentialsByUsername(ctx context.Context, username string) (*UserCredentials, error) {
-	return s.userCredentialsRepo.GetUserCredentialsByUsername(ctx, username)
-}
-
-func NewUserServiceImpl(
-	baseRepo repository.BaseRepo,
-	userRepo UserRepo,
-) *UserServiceImpl {
+func NewUserServiceImpl(config *configs.Config) *UserServiceImpl {
 	return &UserServiceImpl{
-		baseRepo: baseRepo,
-		userRepo: userRepo,
+		config: config,
 	}
 }

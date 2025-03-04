@@ -19,15 +19,16 @@ services:
       - redis_data:/data
   user-service:
     container_name: user-service
-    image: mockserver/mockserver:5.14.0
+    image: mockserver/mockserver:5.15.0
     ports:
       - "1080:1080"
     environment:
       MOCKSERVER_INITIALIZATION_JSON_PATH: /config/spec.json
+      MOCKSERVER_WATCH_INITIALIZATION_JSON: true
     volumes:
       - type: bind
-        source: ./config
-        target: /config
+        source: ./mockserver/spec.json
+        target: /config/spec.json
 volumes:
   postgres_data:
   redis_data:

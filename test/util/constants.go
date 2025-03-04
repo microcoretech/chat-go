@@ -14,7 +14,24 @@
 
 package util
 
+import "time"
+
 const (
-	ChatImage  = "chat-go"
-	RedisImage = "redis:7-alpine"
+	ChatImage       = "chat-go"
+	PostgresImage   = "postgres:17-alpine"
+	RedisImage      = "redis:7-alpine"
+	MockServerImage = "mockserver/mockserver:5.15.0"
+)
+
+const (
+	Timeout = time.Second * 10
+)
+
+const (
+	AdminID       = 1
+	AdminEmail    = "admin@gmail.com"
+	AdminUsername = "admin"
+	UserID        = 2
+	UserEmail     = "user@gmail.com"
+	UserUsername  = "user"
 )

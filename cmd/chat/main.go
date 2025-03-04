@@ -32,19 +32,17 @@ import (
 	"chat-go/internal/infrastructure/configs"
 	"chat-go/internal/infrastructure/connector"
 	"chat-go/internal/infrastructure/database/postgres"
-	"chat-go/internal/infrastructure/database/redis"
 	"chat-go/internal/infrastructure/logger/logrus"
 	"chat-go/internal/infrastructure/validator"
 	usercontract "chat-go/internal/user/contract"
 	userdomain "chat-go/internal/user/domain"
 	userhttp "chat-go/internal/user/http"
-	userrepository "chat-go/internal/user/repository"
 )
 
 func main() {
 	cfg, err := configs.NewConfig()
 	if err != nil {
-		panic(err)
+		panic(fmt.Errorf("errors on init config: %w", err))
 	}
 
 	log, err := logrus.NewLogger(cfg.LogLevel)
@@ -60,10 +58,10 @@ func main() {
 		log.Fatal(fmt.Errorf("error on connection to postgres: %w", err))
 	}
 
-	redisClient, err := redis.NewRedis(ctx, cfg.RedisAddr, cfg.RedisPassword, cfg.RedisDb)
-	if err != nil {
-		log.Fatal(fmt.Errorf("error on connection to redis: %w", err))
-	}
+	// redisClient, err := redis.NewRedis(ctx, cfg.RedisAddr, cfg.RedisPassword, cfg.RedisDb)
+	// if err != nil {
+	//	log.Fatal(fmt.Errorf("error on connection to redis: %w", err))
+	//}
 
 	validate, err := validator.New()
 	if err != nil {
@@ -71,15 +69,11 @@ func main() {
 	}
 
 	baseRepo := repository.NewBaseRepoImpl(dbConn)
-	userRepo := userrepository.NewUserRepoImpl(dbConn)
-	userCredentialsRepo := userrepository.NewUserCredentialsRepoImpl(dbConn)
-	sessionRepo := userrepository.NewSessionRepo(redisClient)
 	chatRepo := chatrepository.NewChatRepoImpl(dbConn)
 	userChatRepo := chatrepository.NewUserChatRepoImpl(dbConn)
 	messageRepo := chatrepository.NewMessageRepoImpl(dbConn)
 
-	authService := userdomain.NewAuthServiceImpl(baseRepo, userRepo, userCredentialsRepo, sessionRepo)
-	userService := userdomain.NewUserServiceImpl(baseRepo, userRepo)
+	userService := userdomain.NewUserServiceImpl(cfg)
 	userServiceContract := usercontract.NewUserServiceContractImpl(userService)
 	chatService := chatdomain.NewChatServiceImpl(baseRepo, chatRepo, userChatRepo, userServiceContract)
 	messageService := chatdomain.NewMessageServiceImpl(messageRepo, userServiceContract)
@@ -88,13 +82,12 @@ func main() {
 
 	connector := connector.NewConnector(log, eventHandler)
 
-	authMiddleware := userhttp.NewAuthMiddleware(authService)
+	authMiddleware := userhttp.NewAuthMiddleware(userService)
 
-	authController := userhttp.NewAuthController(validate, authService, authMiddleware)
 	userController := userhttp.NewUserController(validate, userService)
 	chatController := chathttp.NewChatController(validate, chatService, messageService, connector)
 
-	server := api.NewServer(cfg, log, authMiddleware, authController, userController, chatController)
+	server := api.NewServer(cfg, log, authMiddleware, userController, chatController)
 
 	ctx, cancel = signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM, syscall.SIGQUIT)
 	defer cancel()

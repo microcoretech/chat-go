@@ -44,7 +44,6 @@ type httpServerImpl struct {
 
 	authMiddleware Middleware
 
-	authController Controller
 	userController Controller
 	chatController Controller
 
@@ -67,9 +66,6 @@ func (s *httpServerImpl) init() {
 
 	app.Get("/", rootHandler(s.cfg))
 	app.Get("/healthz", healthzHandler)
-
-	auth := app.Group("/auth")
-	s.authController.SetupRoutes(auth)
 
 	user := app.Group("/users", s.authMiddleware.Handler)
 	s.userController.SetupRoutes(user)
@@ -106,7 +102,6 @@ func NewServer(
 	cfg *configs.Config,
 	log logger.Logger,
 	authMiddleware Middleware,
-	authController Controller,
 	userController Controller,
 	chatController Controller,
 ) Server {
@@ -114,7 +109,6 @@ func NewServer(
 		cfg:            cfg,
 		log:            log,
 		authMiddleware: authMiddleware,
-		authController: authController,
 		userController: userController,
 		chatController: chatController,
 	}

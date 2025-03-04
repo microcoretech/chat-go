@@ -28,8 +28,6 @@ var userSortFields = []string{
 	"role",
 	"firstName",
 	"lastName",
-	"createdAt",
-	"updatedAt",
 }
 
 func UserFilterFromQuery(query UserQuery) (domain.UserFilter, error) {
@@ -42,8 +40,7 @@ func UserFilterFromQuery(query UserQuery) (domain.UserFilter, error) {
 	return domain.UserFilter{
 		IDs:       query.IDs,
 		Emails:    query.Emails,
-		UserNames: query.Usernames,
-		Roles:     query.Roles,
+		Usernames: query.Usernames,
 		Search:    query.Search,
 		Limit:     query.Limit,
 		Offset:    query.Offset,

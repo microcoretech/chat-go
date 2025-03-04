@@ -17,8 +17,7 @@ package domain
 type UserFilter struct {
 	IDs       []uint64
 	Emails    []string
-	UserNames []string
-	Roles     []uint8
+	Usernames []string
 
 	Search string
 
