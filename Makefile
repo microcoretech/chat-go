@@ -73,7 +73,7 @@ gomod-download:
 
 .PHONY: test-e2e
 test-e2e: gomod-download ginkgo docker-build ## Run e2e tests.
-	PROJECT_DIR=$(PROJECT_DIR) $(GINKGO) --race --junit-report=e2e.xml --json-report=e2e.json --output-dir=$(ARTIFACTS_DIR) -v $(E2E_TARGET)
+	$(GINKGO) --race --junit-report=e2e.xml --json-report=e2e.json --output-dir=$(ARTIFACTS_DIR) -v $(E2E_TARGET)
 
 ##@ Build
 

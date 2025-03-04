@@ -17,7 +17,6 @@ package util
 import (
 	"context"
 	"fmt"
-	"path/filepath"
 
 	"github.com/golang-migrate/migrate/v4"
 	migratepostgres "github.com/golang-migrate/migrate/v4/database/postgres"
@@ -34,10 +33,6 @@ const (
 	DbName = "test-db"
 	DbUser = "user"
 	DbPass = "password"
-)
-
-var (
-	MigrationsDir = filepath.Join(ProjectDir, "migrations")
 )
 
 func PostgresURL(ctx context.Context, postgresContainer *testcontainerspostgres.PostgresContainer) (string, error) {
@@ -74,7 +69,12 @@ func Migrate(ctx context.Context, postgresContainer *testcontainerspostgres.Post
 		return err
 	}
 
-	m, err := migrate.NewWithDatabaseInstance(fmt.Sprintf("file://%s", MigrationsDir), DbName, driver)
+	migrationsDir, err := GetMigrationsDir()
+	if err != nil {
+		return err
+	}
+
+	m, err := migrate.NewWithDatabaseInstance(fmt.Sprintf("file://%s", migrationsDir), DbName, driver)
 	if err != nil {
 		return err
 	}

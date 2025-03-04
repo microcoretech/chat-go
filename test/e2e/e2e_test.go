@@ -52,7 +52,10 @@ var _ = ginkgo.Describe("Chat", func() {
 			gotRootResponse := &api.RootResponse{}
 			gomega.Expect(json.Unmarshal(body, gotRootResponse)).To(gomega.Succeed())
 
-			fileVersion, err := os.ReadFile(filepath.Join(util.ProjectDir, "VERSION"))
+			projectDir, err := util.GetProjectDir()
+			gomega.Expect(err).NotTo(gomega.HaveOccurred())
+
+			fileVersion, err := os.ReadFile(filepath.Join(projectDir, "VERSION"))
 			gomega.Expect(err).NotTo(gomega.HaveOccurred())
 
 			wantRootResponse := &api.RootResponse{
