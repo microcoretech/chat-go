@@ -1,0 +1,84 @@
+[
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/users/current",
+      "headers": {
+        "Authorization": ["Bearer invalid"]
+      }
+    },
+    "httpResponse": {
+      "headers": {
+        "Content-Type": ["application/json"]
+      },
+      "statusCode": 401
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/users/current",
+      "headers": {
+        "Authorization": ["Bearer admin"]
+      }
+    },
+    "httpResponse": {
+      "headers": {
+        "Content-Type": ["application/json"]
+      },
+      "body": {
+        "id": 1,
+        "email": "admin@gmail.com",
+        "username": "admin"
+      },
+      "statusCode": 200
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/users/current",
+      "headers": {
+        "Authorization": ["Bearer user"]
+      }
+    },
+    "httpResponse": {
+      "headers": {
+        "Content-Type": ["application/json"]
+      },
+      "body": {
+        "id": 2,
+        "email": "user@gmail.com",
+        "username": "user"
+      },
+      "statusCode": 200
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/users"
+    },
+    "httpResponse": {
+      "headers": {
+        "Content-Type": ["application/json"]
+      },
+      "body": {
+        "items": [
+          {
+            "id": 1,
+            "email": "admin@gmail.com",
+            "username": "admin"
+          },
+          {
+            "id": 2,
+            "email": "user@gmail.com",
+            "username": "user"
+          }
+        ],
+        "count": 2
+      },
+      "statusCode": 200
+    }
+  }
+]

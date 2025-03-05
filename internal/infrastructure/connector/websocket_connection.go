@@ -28,7 +28,7 @@ type WebsocketConnection struct {
 
 	conn      *websocket.Conn
 	connector Connector
-	session   *domain.Session
+	user      *domain.User
 
 	messageChan chan []byte
 	closeChan   chan struct{}
@@ -120,15 +120,15 @@ func (c *WebsocketConnection) Close() {
 	c.conn.Close()
 }
 
-func (c *WebsocketConnection) GetSession() *domain.Session {
-	return c.session
+func (c *WebsocketConnection) GetUser() *domain.User {
+	return c.user
 }
 
-func NewWebSocketConnection(conn *websocket.Conn, session *domain.Session) *WebsocketConnection {
+func NewWebSocketConnection(conn *websocket.Conn, user *domain.User) *WebsocketConnection {
 	return &WebsocketConnection{
 		connectionID: uuid.NewString(),
 		conn:         conn,
-		session:      session,
+		user:         user,
 		messageChan:  make(chan []byte),
 		closeChan:    make(chan struct{}),
 	}

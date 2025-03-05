@@ -34,15 +34,13 @@ type UserController struct {
 }
 
 func (c *UserController) getCurrentUser(ctx *fiber.Ctx) error {
-	session := ctx.Context().UserValue("session").(*domain.Session)
-
-	user, err := c.userService.GetUser(ctx.Context(), session.User.ID)
+	user, err := c.userService.GetCurrentUser(ctx.Context())
 	if err != nil {
 		return err
 	}
 
 	if user == nil {
-		return usererrors.NewUserNotFoundError(map[string]any{"id": session.User.ID})
+		return usererrors.NewUserNotFoundError(nil)
 	}
 
 	return ctx.JSON(http.UserToDto(*user))
@@ -85,16 +83,18 @@ func (c *UserController) getUser(ctx *fiber.Ctx) error {
 		return errors.NewBadRequestError(common.UserDomain, err, map[string]any{"id": idStr})
 	}
 
-	user, err := c.userService.GetUser(ctx.Context(), id)
+	users, _, err := c.userService.GetUsers(ctx.Context(), &domain.UserFilter{
+		IDs: []uint64{id},
+	})
 	if err != nil {
 		return err
 	}
 
-	if user == nil {
+	if len(users) == 0 {
 		return usererrors.NewUserNotFoundError(map[string]any{"id": id})
 	}
 
-	return ctx.JSON(http.UserToDto(*user))
+	return ctx.JSON(http.UserToDto(users[0]))
 }
 
 func (c *UserController) SetupRoutes(r fiber.Router) {
@@ -103,10 +103,7 @@ func (c *UserController) SetupRoutes(r fiber.Router) {
 	r.Get("/:id", c.getUser)
 }
 
-func NewUserController(
-	validate validator.Validate,
-	userService UserService,
-) *UserController {
+func NewUserController(validate validator.Validate, userService UserService) *UserController {
 	return &UserController{
 		validate:    validate,
 		userService: userService,

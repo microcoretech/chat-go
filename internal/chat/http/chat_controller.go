@@ -130,7 +130,7 @@ func (c *ChatController) getChatMessages(ctx *fiber.Ctx) error {
 }
 
 func (c *ChatController) create(ctx *fiber.Ctx) error {
-	session := ctx.Context().UserValue("session").(*domain.Session)
+	user := ctx.Context().UserValue("user").(*domain.User)
 
 	dto := CreateChatDto{}
 	if err := ctx.BodyParser(&dto); err != nil {
@@ -146,7 +146,7 @@ func (c *ChatController) create(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	chat.CreatedBy = session.User.ID
+	chat.CreatedBy = user.ID
 
 	createdChat, err := c.chatService.CreateChat(ctx.Context(), *chat)
 	if err != nil {
@@ -157,9 +157,9 @@ func (c *ChatController) create(ctx *fiber.Ctx) error {
 }
 
 func (c *ChatController) ws(ctx *fiber.Ctx) error {
-	session := ctx.Context().UserValue("session").(*domain.Session)
+	user := ctx.Context().UserValue("user").(*domain.User)
 	return websocket.New(func(conn *websocket.Conn) {
-		connection := chatwebsocket.NewConnection(conn.Conn, session)
+		connection := chatwebsocket.NewConnection(conn.Conn, user)
 		c.connector.AddConnection(connection)
 		<-connection.GetCloseChan()
 	})(ctx)

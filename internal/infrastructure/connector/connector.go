@@ -85,7 +85,7 @@ func (c *ConnectorImpl) clean() {
 }
 
 func (c *ConnectorImpl) AddConnection(conn Connection) {
-	c.log.Debugf("Connected username=%s", conn.GetSession().User.Username)
+	c.log.Debugf("Connected id=%d email=%s username=%s", conn.GetUser().ID, conn.GetUser().Email, conn.GetUser().Username)
 	conn.SetConnector(c)
 	conn.Connect()
 	c.addConnection(conn)

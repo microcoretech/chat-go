@@ -28,8 +28,6 @@ import (
 )
 
 const (
-	PostgresImage = "postgres:17-alpine"
-
 	DbName = "test-db"
 	DbUser = "user"
 	DbPass = "password"

@@ -23,12 +23,21 @@ func UserToDto(user domain.User) UserDto {
 		ID:        user.ID,
 		Email:     user.Email,
 		Username:  user.Username,
-		Role:      user.Role,
 		FirstName: user.FirstName,
 		LastName:  user.LastName,
 		AboutMe:   user.AboutMe,
 		Image:     user.Image,
-		CreatedAt: user.CreatedAt,
-		UpdatedAt: user.UpdatedAt,
+	}
+}
+
+func UserFromDto(user UserDto) domain.User {
+	return domain.User{
+		ID:        user.ID,
+		Email:     user.Email,
+		Username:  user.Username,
+		FirstName: user.FirstName,
+		LastName:  user.LastName,
+		AboutMe:   user.AboutMe,
+		Image:     user.Image,
 	}
 }

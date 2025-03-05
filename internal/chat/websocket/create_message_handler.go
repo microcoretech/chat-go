@@ -34,7 +34,7 @@ func (e *EventHandler) createMessageHandler(conn Connection, rawData []byte) err
 
 	newMessage := MessageFromCreateDto(dto)
 	newMessage.ChatID = *chatID
-	newMessage.CreatedBy = conn.GetSession().User.ID
+	newMessage.CreatedBy = conn.GetUser().ID
 
 	message, err := e.messageService.CreateMessage(context.Background(), newMessage)
 	if err != nil {

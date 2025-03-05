@@ -24,6 +24,7 @@ import (
 const (
 	projectDirEnv    = "PROJECT_DIR"
 	migrationsDirEnv = "MIGRATIONS_DIR"
+	mockServerDirEnv = "MOCKSERVER_DIR"
 )
 
 // GetProjectDir retrieves the project directory either from an environment variable or by searching
@@ -79,4 +80,29 @@ func GetMigrationsDir() (string, error) {
 	}
 
 	return filepath.Join(projectDir, "migrations"), nil
+}
+
+// GetMockserverDir retrieves the mockserver directory either from an environment variable or using
+// the absolute project path.
+func GetMockserverDir() (string, error) {
+	migrationsDir, found := os.LookupEnv(mockServerDirEnv)
+	if found {
+		return filepath.Dir(migrationsDir), nil
+	}
+
+	projectDir, err := GetProjectDir()
+	if err != nil {
+		return "", err
+	}
+
+	return filepath.Join(projectDir, "mockserver"), nil
+}
+
+// GetMockserverSpecPath retrieves the mockserver spec path either
+func GetMockserverSpecPath() (string, error) {
+	mockserverDir, err := GetMockserverDir()
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(mockserverDir, "spec.json"), nil
 }

@@ -33,6 +33,9 @@ type Config struct {
 	RedisPassword string `env:"REDIS_PASSWORD"`
 	RedisDb       int    `env:"REDIS_DB"`
 
+	GetCurrentUserEndpoint string `env:"GET_CURRENT_USER_ENDPOINT" envDefault:"http://0.0.0.0:1080/users/current"`
+	GetUsersEndpoint       string `env:"GET_USERS_ENDPOINT" envDefault:"http://0.0.0.0:1080/users"`
+
 	Version string
 }
 
@@ -41,7 +44,7 @@ func NewConfig() (*Config, error) {
 
 	c := &Config{}
 	if err := env.Parse(c); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error on parsing env: %w", err)
 	}
 
 	fileVersion, err := os.ReadFile("VERSION")

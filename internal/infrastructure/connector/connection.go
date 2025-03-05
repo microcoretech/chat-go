@@ -32,5 +32,5 @@ type Connection interface {
 	Connect()
 	Close()
 
-	GetSession() *domain.Session
+	GetUser() *domain.User
 }

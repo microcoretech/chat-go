@@ -34,14 +34,11 @@ func ErrorHandler(log logger.Logger, environment configs.Environment) fiber.Erro
 		var statusCode int
 
 		switch errType := err.(type) {
-		case
-			*fiber.Error:
-			{
-				fiberErr := errType
-				statusCode = fiberErr.Code
-				if statusCode == http.StatusNotFound {
-					err = errors.NewNotFoundError(common.CommonDomain)
-				}
+		case *fiber.Error:
+			fiberErr := errType
+			statusCode = fiberErr.Code
+			if statusCode == http.StatusNotFound {
+				err = errors.NewNotFoundError(common.CommonDomain)
 			}
 		case
 			*errors.BadRequestError,
@@ -49,47 +46,18 @@ func ErrorHandler(log logger.Logger, environment configs.Environment) fiber.Erro
 			*chaterrors.IncorrectUsersCountError,
 			*chaterrors.InvalidChatNameError,
 			*chaterrors.InvalidChatTypeError:
-			{
-				statusCode = http.StatusBadRequest
-			}
-
-		case
-			*errors.UnauthorizedError:
-			{
-				statusCode = http.StatusUnauthorized
-			}
-
-		case
-			*errors.ForbiddenError:
-			{
-				statusCode = http.StatusForbidden
-			}
-
-		case
-			*errors.NotFoundError,
-			*usererrors.UserNotFoundError:
-			{
-				statusCode = http.StatusNotFound
-			}
-
-		case
-			*usererrors.UserAlreadyCreatedError:
-			{
-				statusCode = http.StatusConflict
-			}
-
-		case
-			*usererrors.UserNotCreatedError,
-			*errors.DatabaseError:
-			{
-				statusCode = http.StatusInternalServerError
-			}
-
+			statusCode = http.StatusBadRequest
+		case *errors.UnauthorizedError:
+			statusCode = http.StatusUnauthorized
+		case *errors.ForbiddenError:
+			statusCode = http.StatusForbidden
+		case *errors.NotFoundError, *usererrors.UserNotFoundError:
+			statusCode = http.StatusNotFound
+		case *errors.UndefinedError:
+			statusCode = http.StatusInternalServerError
 		default:
-			{
-				statusCode = http.StatusInternalServerError
-				err = errors.NewUndefinedError(err)
-			}
+			statusCode = http.StatusInternalServerError
+			err = errors.NewUndefinedError(err)
 		}
 
 		baseError := err.(errors.BaseError)

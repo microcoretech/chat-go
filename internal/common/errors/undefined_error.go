@@ -24,8 +24,8 @@ type UndefinedError struct {
 	*ErrorData
 }
 
-func NewUndefinedError(err error) *UndefinedError {
+func NewUndefinedError(err error, devDetails ...string) *UndefinedError {
 	return &UndefinedError{
-		ErrorData: NewErrorData(common.CommonDomain, UndefinedErrorType, err, nil),
+		ErrorData: NewErrorData(common.CommonDomain, UndefinedErrorType, err, nil, devDetails...),
 	}
 }
