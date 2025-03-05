@@ -309,10 +309,12 @@ func (r *ChatRepoImpl) CreateChat(ctx context.Context, chat domain.Chat, tx repo
 		)
 		SELECT %[2]s
 		FROM %[3]s
+		GROUP BY %[4]s
 	`,
 		chatTableName,
 		r.buildChatFields(),
 		r.buildFrom(),
+		chatFields,
 	)
 
 	var rows *sql.Rows
