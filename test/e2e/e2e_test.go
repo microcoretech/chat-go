@@ -15,6 +15,7 @@
 package e2e
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -23,10 +24,14 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/onsi/ginkgo/v2"
 	"github.com/onsi/gomega"
 
+	chatdomain "chat-go/internal/chat/domain"
+	chathttp "chat-go/internal/chat/http"
 	"chat-go/internal/common/common"
+	commonhttp "chat-go/internal/common/http"
 	"chat-go/internal/infrastructure/api"
 	"chat-go/test/util"
 )
@@ -38,6 +43,10 @@ var _ = ginkgo.Describe("Chat", func() {
 		client = &http.Client{
 			Timeout: 5 * time.Second,
 		}
+
+		ginkgo.DeferCleanup(func() {
+			client.CloseIdleConnections()
+		})
 	})
 
 	ginkgo.Context("root endpoint", func() {
@@ -75,6 +84,61 @@ var _ = ginkgo.Describe("Chat", func() {
 			body, err := io.ReadAll(resp.Body)
 			gomega.Expect(err).NotTo(gomega.HaveOccurred())
 			gomega.Expect(string(body)).To(gomega.Equal("OK"))
+		})
+	})
+
+	ginkgo.Context("chat create endpoint", func() {
+		// TODO: Cleanup created chat after implementation https://github.com/mbobrovskyi/chat-go/issues/28
+		ginkgo.It("should return valid response for create group chat", func() {
+			createChatRequest := chathttp.CreateChatDto{
+				Name: "Test Group Chat",
+				Type: uint8(chatdomain.GroupChatType),
+			}
+			chatReqBody, err := json.Marshal(createChatRequest)
+			gomega.Expect(err).NotTo(gomega.HaveOccurred())
+
+			req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("%s/chats", chatURL), bytes.NewBuffer(chatReqBody))
+			gomega.Expect(err).NotTo(gomega.HaveOccurred())
+			req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", util.AdminUsername))
+			req.Header.Set("Content-Type", "application/json")
+
+			resp, err := client.Do(req)
+			gomega.Expect(err).NotTo(gomega.HaveOccurred())
+
+			body, err := io.ReadAll(resp.Body)
+			gomega.Expect(err).NotTo(gomega.HaveOccurred())
+
+			gomega.Expect(resp.StatusCode).To(gomega.Equal(http.StatusOK))
+
+			var chatResponse chathttp.ChatDto
+			gomega.Expect(json.Unmarshal(body, &chatResponse)).To(gomega.Succeed())
+
+			expectedChatResponse := chathttp.ChatDto{
+				Name:      "Test Group Chat",
+				Type:      uint8(chatdomain.GroupChatType),
+				CreatedBy: util.AdminID,
+				Creator: &commonhttp.UserDto{
+					ID:       util.AdminID,
+					Email:    util.AdminEmail,
+					Username: util.AdminUsername,
+				},
+				UserChats: []chathttp.UserChatDto{
+					{
+						UserID: util.AdminID,
+						User: &commonhttp.UserDto{
+							ID:       util.AdminID,
+							Email:    util.AdminEmail,
+							Username: util.AdminUsername,
+						},
+					},
+				},
+			}
+
+			gomega.Expect(chatResponse).To(gomega.BeComparableTo(
+				expectedChatResponse,
+				cmpopts.IgnoreFields(chathttp.ChatDto{}, "ID", "CreatedAt", "UpdatedAt"),
+				cmpopts.IgnoreFields(chathttp.UserChatDto{}, "ChatID"),
+			))
 		})
 	})
 })
