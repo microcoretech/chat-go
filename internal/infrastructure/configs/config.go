@@ -29,10 +29,6 @@ type Config struct {
 
 	PostgresURI string `env:"POSTGRES_URI" envDefault:"postgresql://postgres:postgres@localhost:5432/chat?sslmode=disable"`
 
-	RedisAddr     string `env:"REDIS_ADDR" envDefault:"localhost:6379"`
-	RedisPassword string `env:"REDIS_PASSWORD"`
-	RedisDb       int    `env:"REDIS_DB"`
-
 	GetCurrentUserEndpoint string `env:"GET_CURRENT_USER_ENDPOINT" envDefault:"http://0.0.0.0:1080/users/current"`
 	GetUsersEndpoint       string `env:"GET_USERS_ENDPOINT" envDefault:"http://0.0.0.0:1080/users"`
 

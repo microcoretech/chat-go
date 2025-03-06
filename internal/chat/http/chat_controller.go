@@ -27,23 +27,26 @@ import (
 	"chat-go/internal/common/domain"
 	"chat-go/internal/common/errors"
 	"chat-go/internal/common/http"
+	"chat-go/internal/infrastructure/api"
 	"chat-go/internal/infrastructure/connector"
 	"chat-go/internal/infrastructure/validator"
 )
 
 type ChatController struct {
 	validate       validator.Validate
+	authMiddleware api.Middleware
 	chatService    ChatService
 	messageService MessageService
 	connector      connector.Connector
 }
 
 func (c *ChatController) SetupRoutes(r fiber.Router) {
-	r.Get("", c.getChats)
-	r.Get("/ws", c.ws)
-	r.Get("/:id", c.getChat)
-	r.Get("/:id/messages", c.getChatMessages)
-	r.Post("", c.create)
+	chatGroup := r.Group("/chats", c.authMiddleware.Handler)
+	chatGroup.Get("", c.getChats)
+	chatGroup.Get("/ws", c.ws)
+	chatGroup.Get("/:id", c.getChat)
+	chatGroup.Get("/:id/messages", c.getChatMessages)
+	chatGroup.Post("", c.create)
 }
 
 func (c *ChatController) getChats(ctx *fiber.Ctx) error {
@@ -167,12 +170,14 @@ func (c *ChatController) ws(ctx *fiber.Ctx) error {
 
 func NewChatController(
 	validate validator.Validate,
+	authMiddleware api.Middleware,
 	chatService ChatService,
 	messageService MessageService,
 	connector connector.Connector,
 ) *ChatController {
 	return &ChatController{
 		validate:       validate,
+		authMiddleware: authMiddleware,
 		chatService:    chatService,
 		messageService: messageService,
 		connector:      connector,

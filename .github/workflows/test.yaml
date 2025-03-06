@@ -17,13 +17,21 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Verify
+      - name: Run verify
         run: make verify
-  e2e:
-    name: E2E tests
+  integration:
+    name: Integration
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: E2E tests
+      - name: Run integration tests
+        run: make test-integration
+  e2e:
+    name: E2E
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run e2e tests
         run: make test-e2e
