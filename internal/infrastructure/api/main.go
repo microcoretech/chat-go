@@ -32,25 +32,18 @@ var (
 	ServerAlreadyStartedError = errors.New("server already started")
 )
 
-type Server interface {
-	Start(ctx context.Context) error
-}
-
-type httpServerImpl struct {
+type HTTPServer struct {
 	log logger.Logger
 	cfg *configs.Config
 
 	app *fiber.App
 
-	authMiddleware Middleware
-
-	userController Controller
-	chatController Controller
+	controllers []Controller
 
 	isStarted bool
 }
 
-func (s *httpServerImpl) init() {
+func (s *HTTPServer) init() {
 	app := fiber.New(fiber.Config{
 		ErrorHandler: ErrorHandler(s.log, s.cfg.Environment),
 	})
@@ -67,16 +60,18 @@ func (s *httpServerImpl) init() {
 	app.Get("/", rootHandler(s.cfg))
 	app.Get("/healthz", healthzHandler)
 
-	user := app.Group("/users", s.authMiddleware.Handler)
-	s.userController.SetupRoutes(user)
-
-	chat := app.Group("/chats", s.authMiddleware.Handler)
-	s.chatController.SetupRoutes(chat)
+	for _, controller := range s.controllers {
+		controller.SetupRoutes(app)
+	}
 
 	s.app = app
 }
 
-func (s *httpServerImpl) Start(ctx context.Context) error {
+func (s *HTTPServer) App() *fiber.App {
+	return s.app
+}
+
+func (s *HTTPServer) Start(ctx context.Context) error {
 	if s.isStarted {
 		return ServerAlreadyStartedError
 	}
@@ -98,19 +93,11 @@ func (s *httpServerImpl) Start(ctx context.Context) error {
 	return nil
 }
 
-func NewServer(
-	cfg *configs.Config,
-	log logger.Logger,
-	authMiddleware Middleware,
-	userController Controller,
-	chatController Controller,
-) Server {
-	s := &httpServerImpl{
-		cfg:            cfg,
-		log:            log,
-		authMiddleware: authMiddleware,
-		userController: userController,
-		chatController: chatController,
+func NewHTTPServer(cfg *configs.Config, log logger.Logger, controllers ...Controller) *HTTPServer {
+	s := &HTTPServer{
+		cfg:         cfg,
+		log:         log,
+		controllers: controllers,
 	}
 
 	s.init()

@@ -20,7 +20,9 @@ import (
 
 	"github.com/golang-migrate/migrate/v4"
 	migratepostgres "github.com/golang-migrate/migrate/v4/database/postgres"
+	"github.com/testcontainers/testcontainers-go"
 	testcontainerspostgres "github.com/testcontainers/testcontainers-go/modules/postgres"
+	"github.com/testcontainers/testcontainers-go/wait"
 
 	"chat-go/internal/infrastructure/database/postgres"
 
@@ -28,30 +30,28 @@ import (
 )
 
 const (
-	DbName = "test-db"
-	DbUser = "user"
-	DbPass = "password"
+	PostgresImage = "postgres:17-alpine"
+	DbName        = "test-db"
+	DbUser        = "user"
+	DbPass        = "password"
 )
 
-func PostgresURL(ctx context.Context, postgresContainer *testcontainerspostgres.PostgresContainer) (string, error) {
-	chatPort, err := postgresContainer.MappedPort(ctx, "5432/tcp")
+func PostgresURIForContainer(ctx context.Context, postgresContainer *testcontainerspostgres.PostgresContainer) (string, error) {
+	port, err := postgresContainer.MappedPort(ctx, "5432/tcp")
 	if err != nil {
 		return "", err
 	}
 
-	chatHost, err := postgresContainer.Host(ctx)
+	host, err := postgresContainer.Host(ctx)
 	if err != nil {
 		return "", err
 	}
 
-	return fmt.Sprintf(
-		"postgres://%s:%s@%s:%s/%s?sslmode=disable",
-		DbUser, DbPass, chatHost, chatPort.Port(), DbName,
-	), nil
+	return BuildPostgresURI(host, port.Port()), nil
 }
 
 func Migrate(ctx context.Context, postgresContainer *testcontainerspostgres.PostgresContainer) error {
-	postgresURL, err := PostgresURL(ctx, postgresContainer)
+	postgresURL, err := PostgresURIForContainer(ctx, postgresContainer)
 	if err != nil {
 		return err
 	}
@@ -83,4 +83,19 @@ func Migrate(ctx context.Context, postgresContainer *testcontainerspostgres.Post
 	}
 
 	return nil
+}
+
+func RunPostgresContainer(ctx context.Context) (*testcontainerspostgres.PostgresContainer, error) {
+	return testcontainerspostgres.Run(
+		ctx,
+		PostgresImage,
+		testcontainerspostgres.WithDatabase(DbName),
+		testcontainerspostgres.WithUsername(DbUser),
+		testcontainerspostgres.WithPassword(DbPass),
+		testcontainers.WithWaitStrategy(wait.ForListeningPort("5432/tcp")),
+	)
+}
+
+func BuildPostgresURI(host, port string) string {
+	return fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=disable", DbUser, DbPass, host, port, DbName)
 }

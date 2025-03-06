@@ -20,6 +20,7 @@ BIN_DIR ?= $(PROJECT_DIR)/bin
 ARTIFACTS_DIR ?= $(PROJECT_DIR)/artifacts
 
 E2E_TARGET ?= $(PROJECT_DIR)/test/e2e/...
+INTEGRATION_TARGET ?= $(PROJECT_DIR)/test/integration/...
 
 BINARY ?= chat-go
 IMAGE_NAME ?= chat-go
@@ -73,7 +74,11 @@ gomod-download:
 
 .PHONY: test-e2e
 test-e2e: gomod-download ginkgo docker-build ## Run e2e tests.
-	$(GINKGO) --race --junit-report=e2e.xml --json-report=e2e.json --output-dir=$(ARTIFACTS_DIR) -v $(E2E_TARGET)
+	$(GINKGO) --race -v $(E2E_TARGET)
+
+.PHONY: test-integration
+test-integration: gomod-download ginkgo ## Run e2e tests.
+	$(GINKGO) --race -v $(INTEGRATION_TARGET)
 
 ##@ Build
 

@@ -12,24 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package redis
+package integration
 
 import (
 	"context"
+	"testing"
 
-	"github.com/redis/go-redis/v9"
+	"github.com/onsi/ginkgo/v2"
+	"github.com/onsi/gomega"
 )
 
-func NewRedis(ctx context.Context, redisHost, password string, redisDB int) (*redis.Client, error) {
-	rdb := redis.NewClient(&redis.Options{
-		Addr:     redisHost,
-		Password: password,
-		DB:       redisDB,
-	})
+var (
+	env *TestEnvironment
+)
 
-	if err := rdb.Ping(ctx).Err(); err != nil {
-		return nil, err
-	}
-
-	return rdb, nil
+func TestAPI(t *testing.T) {
+	gomega.RegisterFailHandler(ginkgo.Fail)
+	ginkgo.RunSpecs(t, "API Test Suite")
 }
+
+var _ = ginkgo.BeforeSuite(func() {
+	ctx := context.Background()
+	env = NewTestEnvironment()
+	gomega.Expect(env.Init(ctx)).Should(gomega.Succeed())
+})
+
+var _ = ginkgo.AfterSuite(func() {
+	ctx := context.Background()
+	gomega.Expect(env.Cleanup(ctx)).To(gomega.Succeed())
+})

@@ -17,10 +17,7 @@ package util
 import "time"
 
 const (
-	ChatImage       = "chat-go"
-	PostgresImage   = "postgres:17-alpine"
-	RedisImage      = "redis:7-alpine"
-	MockServerImage = "mockserver/mockserver:5.15.0"
+	ChatImage = "chat-go"
 )
 
 const (

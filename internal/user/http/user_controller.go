@@ -23,14 +23,16 @@ import (
 	"chat-go/internal/common/domain"
 	"chat-go/internal/common/errors"
 	"chat-go/internal/common/http"
+	"chat-go/internal/infrastructure/api"
 	"chat-go/internal/infrastructure/validator"
 	"chat-go/internal/user/common"
 	usererrors "chat-go/internal/user/errors"
 )
 
 type UserController struct {
-	validate    validator.Validate
-	userService UserService
+	validate       validator.Validate
+	authMiddleware api.Middleware
+	userService    UserService
 }
 
 func (c *UserController) getCurrentUser(ctx *fiber.Ctx) error {
@@ -98,14 +100,16 @@ func (c *UserController) getUser(ctx *fiber.Ctx) error {
 }
 
 func (c *UserController) SetupRoutes(r fiber.Router) {
-	r.Get("/current", c.getCurrentUser)
-	r.Get("", c.getUsers)
-	r.Get("/:id", c.getUser)
+	usersGroup := r.Group("/users", c.authMiddleware.Handler)
+	usersGroup.Get("/current", c.getCurrentUser)
+	usersGroup.Get("", c.getUsers)
+	usersGroup.Get("/:id", c.getUser)
 }
 
-func NewUserController(validate validator.Validate, userService UserService) *UserController {
+func NewUserController(validate validator.Validate, authMiddleware api.Middleware, userService UserService) *UserController {
 	return &UserController{
-		validate:    validate,
-		userService: userService,
+		validate:       validate,
+		authMiddleware: authMiddleware,
+		userService:    userService,
 	}
 }

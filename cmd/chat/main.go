@@ -58,11 +58,6 @@ func main() {
 		log.Fatal(fmt.Errorf("error on connection to postgres: %w", err))
 	}
 
-	// redisClient, err := redis.NewRedis(ctx, cfg.RedisAddr, cfg.RedisPassword, cfg.RedisDb)
-	// if err != nil {
-	//	log.Fatal(fmt.Errorf("error on connection to redis: %w", err))
-	//}
-
 	validate, err := validator.New()
 	if err != nil {
 		log.Fatalf("error on create validator: %s", err)
@@ -84,10 +79,10 @@ func main() {
 
 	authMiddleware := userhttp.NewAuthMiddleware(userService)
 
-	userController := userhttp.NewUserController(validate, userService)
-	chatController := chathttp.NewChatController(validate, chatService, messageService, connector)
+	userController := userhttp.NewUserController(validate, authMiddleware, userService)
+	chatController := chathttp.NewChatController(validate, authMiddleware, chatService, messageService, connector)
 
-	server := api.NewServer(cfg, log, authMiddleware, userController, chatController)
+	server := api.NewHTTPServer(cfg, log, userController, chatController)
 
 	ctx, cancel = signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM, syscall.SIGQUIT)
 	defer cancel()
