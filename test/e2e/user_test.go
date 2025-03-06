@@ -28,16 +28,12 @@ import (
 )
 
 var _ = ginkgo.Describe("User", func() {
-	var client *http.Client
+	var client util.HTTPClient
 
 	ginkgo.BeforeEach(func() {
 		client = &http.Client{
 			Timeout: util.Timeout,
 		}
-
-		ginkgo.DeferCleanup(func() {
-			client.CloseIdleConnections()
-		})
 	})
 
 	ginkgo.Context("get current user endpoint", func() {
@@ -45,7 +41,7 @@ var _ = ginkgo.Describe("User", func() {
 			req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/users/current", chatURL), nil)
 			gomega.Expect(err).NotTo(gomega.HaveOccurred())
 
-			req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", util.AdminUsername))
+			req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", util.AdminToken))
 
 			resp, err := client.Do(req)
 			gomega.Expect(err).NotTo(gomega.HaveOccurred())
@@ -75,7 +71,7 @@ var _ = ginkgo.Describe("User", func() {
 			req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/users", chatURL), nil)
 			gomega.Expect(err).NotTo(gomega.HaveOccurred())
 
-			req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", util.AdminUsername))
+			req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", util.AdminToken))
 
 			resp, err := client.Do(req)
 			gomega.Expect(err).NotTo(gomega.HaveOccurred())

@@ -12,19 +12,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package domain
+package integration
 
 import (
-	"context"
+	"net/http"
+	"time"
 
-	"chat-go/internal/common/repository"
+	"chat-go/test/util"
 )
 
-type ChatRepo interface {
-	GetChat(ctx context.Context, id uint64) (*Chat, error)
-	GetChats(ctx context.Context, filter *ChatFilter) ([]Chat, error)
-	GetChatsCount(ctx context.Context, filter *ChatFilter) (uint64, error)
-	CreateChat(ctx context.Context, chat Chat, tx repository.Tx) (*Chat, error)
-	UpdateChat(ctx context.Context, chat Chat) (*Chat, error)
-	DeleteChat(ctx context.Context, id, createdBy uint64) error
+var _ util.HTTPClient = (*TestHTTPClient)(nil)
+
+type TestHTTPClient struct {
+	env     *TestEnvironment
+	timeout *time.Duration
+}
+
+func NewTestHTTPClient(env *TestEnvironment) *TestHTTPClient {
+	return &TestHTTPClient{
+		env: env,
+	}
+}
+
+func (c *TestHTTPClient) WithTimeout(timeout time.Duration) *TestHTTPClient {
+	c.timeout = &timeout
+	return c
+}
+
+func (c *TestHTTPClient) Do(req *http.Request) (*http.Response, error) {
+	msTimeout := -1
+	if c.timeout != nil {
+		msTimeout = int(c.timeout.Milliseconds())
+	}
+	return c.env.App().Test(req, msTimeout)
 }

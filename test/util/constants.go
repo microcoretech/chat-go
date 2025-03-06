@@ -21,14 +21,17 @@ const (
 )
 
 const (
-	Timeout = time.Second * 10
+	Timeout = time.Second
 )
 
 const (
 	AdminID       = 1
 	AdminEmail    = "admin@gmail.com"
 	AdminUsername = "admin"
-	UserID        = 2
-	UserEmail     = "user@gmail.com"
-	UserUsername  = "user"
+	AdminToken    = "admin"
+
+	UserID       = 2
+	UserEmail    = "user@gmail.com"
+	UserUsername = "user"
+	UserToken    = "user"
 )
