@@ -135,8 +135,6 @@ func (c *ChatController) getChatMessages(ctx *fiber.Ctx) error {
 }
 
 func (c *ChatController) create(ctx *fiber.Ctx) error {
-	user := ctx.Context().UserValue("user").(*domain.User)
-
 	dto := CreateChatDto{}
 	if err := ctx.BodyParser(&dto); err != nil {
 		return errors.NewBadRequestError(common.ChatDomain, err, nil)
@@ -151,8 +149,6 @@ func (c *ChatController) create(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	chat.CreatedBy = user.ID
-
 	createdChat, err := c.chatService.CreateChat(ctx.Context(), *chat)
 	if err != nil {
 		return err
@@ -162,8 +158,6 @@ func (c *ChatController) create(ctx *fiber.Ctx) error {
 }
 
 func (c *ChatController) delete(ctx *fiber.Ctx) error {
-	user := ctx.Context().UserValue("user").(*domain.User)
-
 	idStr := ctx.Params("id")
 
 	id, err := strconv.ParseUint(idStr, 10, 64)
@@ -171,7 +165,7 @@ func (c *ChatController) delete(ctx *fiber.Ctx) error {
 		return errors.NewBadRequestError(common.ChatDomain, err, map[string]any{"id": idStr})
 	}
 
-	err = c.chatService.DeleteChat(ctx.Context(), id, user.ID)
+	err = c.chatService.DeleteChat(ctx.Context(), id)
 	if err != nil {
 		return err
 	}
