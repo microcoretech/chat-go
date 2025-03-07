@@ -15,6 +15,7 @@
 package http
 
 import (
+	"net/http"
 	"strconv"
 
 	"github.com/gofiber/contrib/websocket"
@@ -26,7 +27,7 @@ import (
 	chatwebsocket "chat-go/internal/chat/websocket"
 	"chat-go/internal/common/domain"
 	"chat-go/internal/common/errors"
-	"chat-go/internal/common/http"
+	commonhttp "chat-go/internal/common/http"
 	"chat-go/internal/infrastructure/api"
 	"chat-go/internal/infrastructure/connector"
 	"chat-go/internal/infrastructure/validator"
@@ -47,6 +48,7 @@ func (c *ChatController) SetupRoutes(r fiber.Router) {
 	chatGroup.Get("/:id", c.getChat)
 	chatGroup.Get("/:id/messages", c.getChatMessages)
 	chatGroup.Post("", c.create)
+	chatGroup.Delete("/:id", c.delete)
 }
 
 func (c *ChatController) getChats(ctx *fiber.Ctx) error {
@@ -70,7 +72,7 @@ func (c *ChatController) getChats(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	return ctx.JSON(http.NewPage(
+	return ctx.JSON(commonhttp.NewPage(
 		lo.Map(chats, func(chat chatdomain.Chat, _ int) ChatDto {
 			return ChatToDto(chat)
 		}),
@@ -124,7 +126,7 @@ func (c *ChatController) getChatMessages(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	return ctx.JSON(http.NewPage(
+	return ctx.JSON(commonhttp.NewPage(
 		lo.Map(messages, func(message chatdomain.Message, _ int) MessageDto {
 			return MessageToDto(message)
 		}),
@@ -157,6 +159,24 @@ func (c *ChatController) create(ctx *fiber.Ctx) error {
 	}
 
 	return ctx.JSON(ChatToDto(*createdChat))
+}
+
+func (c *ChatController) delete(ctx *fiber.Ctx) error {
+	user := ctx.Context().UserValue("user").(*domain.User)
+
+	idStr := ctx.Params("id")
+
+	id, err := strconv.ParseUint(idStr, 10, 64)
+	if err != nil {
+		return errors.NewBadRequestError(common.ChatDomain, err, map[string]any{"id": idStr})
+	}
+
+	err = c.chatService.DeleteChat(ctx.Context(), id, user.ID)
+	if err != nil {
+		return err
+	}
+
+	return ctx.SendStatus(http.StatusOK)
 }
 
 func (c *ChatController) ws(ctx *fiber.Ctx) error {

@@ -12,19 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package domain
+package util
 
-import (
-	"context"
+import "net/http"
 
-	"chat-go/internal/common/repository"
-)
-
-type ChatRepo interface {
-	GetChat(ctx context.Context, id uint64) (*Chat, error)
-	GetChats(ctx context.Context, filter *ChatFilter) ([]Chat, error)
-	GetChatsCount(ctx context.Context, filter *ChatFilter) (uint64, error)
-	CreateChat(ctx context.Context, chat Chat, tx repository.Tx) (*Chat, error)
-	UpdateChat(ctx context.Context, chat Chat) (*Chat, error)
-	DeleteChat(ctx context.Context, id, createdBy uint64) error
+type HTTPClient interface {
+	Do(req *http.Request) (*http.Response, error)
 }

@@ -181,14 +181,23 @@ func (s *ChatServiceImpl) UpdateChat(ctx context.Context, chat Chat) (*Chat, err
 	return updatedChat, nil
 }
 
-func (s *ChatServiceImpl) DeleteChat(ctx context.Context, id uint64) error {
-	ok, err := s.chatRepo.DeleteChat(ctx, id)
+func (s *ChatServiceImpl) DeleteChat(ctx context.Context, id, createdBy uint64) error {
+	chat, err := s.chatRepo.GetChat(ctx, id)
 	if err != nil {
 		return err
 	}
 
-	if !ok {
+	if chat == nil {
 		return errors.NewNotFoundError(common.ChatDomain)
+	}
+
+	if chat.CreatedBy != createdBy {
+		return errors.NewForbiddenError()
+	}
+
+	err = s.chatRepo.DeleteChat(ctx, id, createdBy)
+	if err != nil {
+		return err
 	}
 
 	return nil
