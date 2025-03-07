@@ -348,9 +348,9 @@ func (r *ChatRepoImpl) UpdateChat(ctx context.Context, chat domain.Chat) (*domai
 	panic("implement me")
 }
 
-func (r *ChatRepoImpl) DeleteChat(ctx context.Context, id, createdBy uint64) error {
-	query := fmt.Sprintf(`DELETE FROM %[1]s WHERE id = $1 AND created_by = $2`, chatTableName)
-	_, err := r.db.ExecContext(ctx, query, id, createdBy)
+func (r *ChatRepoImpl) DeleteChat(ctx context.Context, id uint64) error {
+	query := fmt.Sprintf(`DELETE FROM %[1]s WHERE id = $1`, chatTableName)
+	_, err := r.db.ExecContext(ctx, query, id)
 	if err != nil {
 		return errors.NewDatabaseError(common.ChatDomain, err)
 	}

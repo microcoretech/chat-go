@@ -26,5 +26,5 @@ type ChatRepo interface {
 	GetChatsCount(ctx context.Context, filter *ChatFilter) (uint64, error)
 	CreateChat(ctx context.Context, chat Chat, tx repository.Tx) (*Chat, error)
 	UpdateChat(ctx context.Context, chat Chat) (*Chat, error)
-	DeleteChat(ctx context.Context, id, createdBy uint64) error
+	DeleteChat(ctx context.Context, id uint64) error
 }
