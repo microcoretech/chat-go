@@ -117,7 +117,7 @@ func (s *ChatServiceImpl) GetChats(ctx context.Context, filter *ChatFilter) ([]C
 }
 
 func (s *ChatServiceImpl) CreateChat(ctx context.Context, chat Chat) (*Chat, error) {
-	user := ctx.Value("user").(*domain.User)
+	user := domain.UserFromContext(ctx)
 
 	chat.CreatedBy = user.ID
 
@@ -186,7 +186,7 @@ func (s *ChatServiceImpl) UpdateChat(ctx context.Context, chat Chat) (*Chat, err
 }
 
 func (s *ChatServiceImpl) DeleteChat(ctx context.Context, id uint64) error {
-	user := ctx.Value("user").(*domain.User)
+	user := domain.UserFromContext(ctx)
 
 	chat, err := s.chatRepo.GetChat(ctx, id)
 	if err != nil {

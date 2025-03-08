@@ -174,7 +174,7 @@ func (c *ChatController) delete(ctx *fiber.Ctx) error {
 }
 
 func (c *ChatController) ws(ctx *fiber.Ctx) error {
-	user := ctx.Context().UserValue("user").(*domain.User)
+	user := domain.UserFromContext(ctx.Context())
 	return websocket.New(func(conn *websocket.Conn) {
 		connection := chatwebsocket.NewConnection(conn.Conn, user)
 		c.connector.AddConnection(connection)
