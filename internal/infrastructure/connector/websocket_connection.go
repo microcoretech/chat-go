@@ -19,8 +19,6 @@ import (
 
 	"github.com/fasthttp/websocket"
 	"github.com/google/uuid"
-
-	"chat-go/internal/common/domain"
 )
 
 type WebsocketConnection struct {
@@ -28,7 +26,6 @@ type WebsocketConnection struct {
 
 	conn      *websocket.Conn
 	connector Connector
-	user      *domain.User
 
 	messageChan chan []byte
 	closeChan   chan struct{}
@@ -120,15 +117,10 @@ func (c *WebsocketConnection) Close() {
 	c.conn.Close()
 }
 
-func (c *WebsocketConnection) GetUser() *domain.User {
-	return c.user
-}
-
-func NewWebSocketConnection(conn *websocket.Conn, user *domain.User) *WebsocketConnection {
+func NewWebSocketConnection(conn *websocket.Conn) *WebsocketConnection {
 	return &WebsocketConnection{
 		connectionID: uuid.NewString(),
 		conn:         conn,
-		user:         user,
 		messageChan:  make(chan []byte),
 		closeChan:    make(chan struct{}),
 	}

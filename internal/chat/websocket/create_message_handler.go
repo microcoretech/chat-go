@@ -19,7 +19,7 @@ import (
 	"encoding/json"
 )
 
-func (e *EventHandler) createMessageHandler(conn Connection, rawData []byte) error {
+func (e *EventHandler) createMessageHandler(ctx context.Context, conn Connection, rawData []byte) error {
 	dto := MessageDto{}
 	if err := json.Unmarshal(rawData, &dto); err != nil {
 		return err
@@ -34,9 +34,8 @@ func (e *EventHandler) createMessageHandler(conn Connection, rawData []byte) err
 
 	newMessage := MessageFromCreateDto(dto)
 	newMessage.ChatID = *chatID
-	newMessage.CreatedBy = conn.GetUser().ID
 
-	message, err := e.messageService.CreateMessage(context.Background(), newMessage)
+	message, err := e.messageService.CreateMessage(ctx, newMessage)
 	if err != nil {
 		return err
 	}
