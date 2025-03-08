@@ -44,7 +44,7 @@ func (s *UserServiceImpl) GetCurrentUser(ctx context.Context) (*domain.User, err
 		return nil, err
 	}
 
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", ctx.Value("token").(string)))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", domain.TokenFromContext(ctx)))
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -88,7 +88,7 @@ func (s *UserServiceImpl) GetUsers(ctx context.Context, filter *domain.UserFilte
 		return nil, 0, err
 	}
 
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", ctx.Value("token").(string)))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", domain.TokenFromContext(ctx)))
 
 	q := req.URL.Query()
 
