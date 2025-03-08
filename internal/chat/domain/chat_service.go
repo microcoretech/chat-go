@@ -16,7 +16,6 @@ package domain
 
 import (
 	"context"
-	"fmt"
 
 	"golang.org/x/exp/maps"
 
@@ -174,11 +173,7 @@ func (s *ChatServiceImpl) CreateChat(ctx context.Context, chat Chat) (*Chat, err
 }
 
 func (s *ChatServiceImpl) UpdateChat(ctx context.Context, chat Chat) (*Chat, error) {
-	var (
-		setClause []string
-		values    []any
-	)
-	user := ctx.Value("user").(*domain.User)
+	user := domain.UserFromContext(ctx)
 
 	existingChat, err := s.GetChat(ctx, chat.ID)
 	if err != nil {
@@ -193,19 +188,7 @@ func (s *ChatServiceImpl) UpdateChat(ctx context.Context, chat Chat) (*Chat, err
 		return nil, errors.NewForbiddenError()
 	}
 
-	if chat.Name != "" {
-		values = append(values, chat.Name)
-		setClause = append(setClause, fmt.Sprintf("name = $%d", len(values)))
-	}
-
-	if chat.Image.URL != "" {
-		values = append(values, chat.Image.URL)
-		setClause = append(setClause, fmt.Sprintf("image_url = $%d", len(values)))
-	}
-
-	values = append(values, chat.ID)
-
-	updatedChat, err := s.chatRepo.UpdateChat(ctx, values, setClause, chat)
+	updatedChat, err := s.chatRepo.UpdateChat(ctx, chat)
 	if err != nil {
 		return nil, err
 	}

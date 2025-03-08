@@ -17,6 +17,7 @@ package api
 import (
 	"net/http"
 
+	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/onsi/ginkgo/v2"
 	"github.com/onsi/gomega"
 
@@ -66,6 +67,19 @@ var _ = ginkgo.Describe("Chat", ginkgo.Ordered, ginkgo.ContinueOnFailure, func()
 			ginkgo.By("deleting chat", func() {
 				util.DeleteChatWithStatus(httpClient, "", util.UserToken, chat.ID, http.StatusForbidden)
 			})
+		})
+	})
+	ginkgo.Context("update chat endpoint", func() {
+		ginkgo.It("should return forbidden error when unauthorized user tries to update chat", func() {
+			updateChatRequest := &chathttp.UpdateChatDto{
+				Name: "Updated Group Chat",
+			}
+
+			updatedChat := util.UpdateChat(httpClient, "", util.UserToken, chat.ID, updateChatRequest, http.StatusForbidden)
+			gomega.Expect(updatedChat).To(gomega.BeComparableTo(
+				&chathttp.ChatDto{},
+				cmpopts.IgnoreFields(chathttp.ChatDto{}, "CreatedAt", "UpdatedAt"),
+			))
 		})
 	})
 })

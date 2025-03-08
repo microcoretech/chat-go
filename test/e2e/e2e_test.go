@@ -42,6 +42,8 @@ var _ = ginkgo.Describe("Chat", func() {
 		client = &http.Client{
 			Timeout: util.Timeout,
 		}
+
+		util.RemoveAllChats(client, chatURL, util.AdminToken)
 	})
 
 	ginkgo.Context("root endpoint", func() {
@@ -95,11 +97,6 @@ var _ = ginkgo.Describe("Chat", func() {
 				Type: uint8(chatdomain.GroupChatType),
 			}
 
-			chatResponse := util.CreateChat(client, chatURL, util.AdminToken, createChatRequest)
-			ginkgo.DeferCleanup(func() {
-				util.DeleteChat(client, chatURL, util.AdminToken, chatResponse.ID)
-			})
-
 			gomega.Expect(util.CreateChat(client, chatURL, util.AdminToken, createChatRequest)).To(gomega.BeComparableTo(
 				&chathttp.ChatDto{
 					Name:      "Test Group Chat",
@@ -124,6 +121,41 @@ var _ = ginkgo.Describe("Chat", func() {
 				cmpopts.IgnoreFields(chathttp.ChatDto{}, "ID", "CreatedAt", "UpdatedAt"),
 				cmpopts.IgnoreFields(chathttp.UserChatDto{}, "ChatID"),
 			))
+		})
+	})
+
+	ginkgo.Context("update chat endpoint", func() {
+		ginkgo.It("should return valid response for updating group chat", func() {
+			createChatRequest := &chathttp.CreateChatDto{
+				Name: "Test Group Chat",
+				Type: uint8(chatdomain.GroupChatType),
+			}
+			createdChat := util.CreateChat(client, chatURL, util.AdminToken, createChatRequest)
+
+			updateChatRequest := &chathttp.UpdateChatDto{
+				Name: "Updated Group Chat",
+			}
+
+			expectedChatResponse := chathttp.ChatDto{
+				ID:        createdChat.ID,
+				Name:      "Updated Group Chat",
+				Type:      uint8(chatdomain.GroupChatType),
+				CreatedBy: util.AdminID,
+				UserChats: []chathttp.UserChatDto{
+					{
+						UserID: util.AdminID,
+						ChatID: createdChat.ID,
+					},
+				},
+			}
+
+			updatedChat := util.UpdateChat(client, chatURL, util.AdminToken, createdChat.ID, updateChatRequest, http.StatusOK)
+			gomega.Expect(updatedChat).To(gomega.BeComparableTo(
+				&expectedChatResponse,
+				cmpopts.IgnoreFields(chathttp.ChatDto{}, "CreatedAt", "UpdatedAt"),
+			))
+			gomega.Expect(updatedChat.UpdatedAt).ToNot(gomega.BeZero())
+			gomega.Expect(updatedChat.UpdatedAt.After(updatedChat.CreatedAt) || updatedChat.UpdatedAt.Equal(updatedChat.CreatedAt)).To(gomega.BeTrue(), "UpdatedAt should be after or equal to CreatedAt")
 		})
 	})
 })
