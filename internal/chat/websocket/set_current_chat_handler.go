@@ -15,11 +15,10 @@
 package websocket
 
 import (
-	"context"
 	"encoding/json"
 )
 
-func (e *EventHandler) setCurrentChatHandler(_ context.Context, conn Connection, rawData []byte) error {
+func (e *EventHandler) setCurrentChatHandler(conn Connection, rawData []byte) error {
 	var chatID uint64
 
 	if err := json.Unmarshal(rawData, &chatID); err != nil {

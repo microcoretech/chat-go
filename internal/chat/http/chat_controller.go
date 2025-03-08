@@ -25,6 +25,7 @@ import (
 	"chat-go/internal/chat/common"
 	chatdomain "chat-go/internal/chat/domain"
 	chatwebsocket "chat-go/internal/chat/websocket"
+	"chat-go/internal/common/domain"
 	"chat-go/internal/common/errors"
 	commonhttp "chat-go/internal/common/http"
 	"chat-go/internal/infrastructure/api"
@@ -173,9 +174,10 @@ func (c *ChatController) delete(ctx *fiber.Ctx) error {
 }
 
 func (c *ChatController) ws(ctx *fiber.Ctx) error {
+	user := domain.UserFromContext(ctx.Context())
 	return websocket.New(func(conn *websocket.Conn) {
-		connection := chatwebsocket.NewConnection(conn.Conn)
-		c.connector.AddConnection(ctx.Context(), connection)
+		connection := chatwebsocket.NewConnection(conn.Conn, user)
+		c.connector.AddConnection(connection)
 		<-connection.GetCloseChan()
 	})(ctx)
 }

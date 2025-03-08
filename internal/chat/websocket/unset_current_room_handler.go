@@ -14,9 +14,7 @@
 
 package websocket
 
-import "context"
-
-func (e *EventHandler) unsetCurrentChatHandler(_ context.Context, conn Connection, _ []byte) error {
+func (e *EventHandler) unsetCurrentChatHandler(conn Connection, rawData []byte) error {
 	conn.SetSubscribedChats(nil)
 	return nil
 }
