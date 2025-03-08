@@ -22,7 +22,7 @@ import (
 	"chat-go/internal/chat/domain"
 )
 
-func (e *EventHandler) updateMessagesStatusHandler(conn Connection, rawData []byte) error {
+func (e *EventHandler) updateMessagesStatusHandler(ctx context.Context, conn Connection, rawData []byte) error {
 	var dto MessagesStatusDto
 
 	if err := json.Unmarshal(rawData, &dto); err != nil {

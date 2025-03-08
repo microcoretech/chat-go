@@ -32,24 +32,24 @@ type EventHandler struct {
 	messageService MessageService
 }
 
-func (e *EventHandler) HandleEvent(baseConn connector.Connection, event connector.Event) error {
+func (e *EventHandler) HandleEvent(ctx context.Context, baseConn connector.Connection, event connector.Event) error {
 	conn := baseConn.(Connection)
 
 	switch event.Type {
 	case SubscribeChatsEventType:
-		return e.subscribeChatHandler(conn, event.Data)
+		return e.subscribeChatHandler(ctx, conn, event.Data)
 	case UnsubscribeChatsEventType:
-		return e.unsubscribeRoomHandler(conn, event.Data)
+		return e.unsubscribeRoomHandler(ctx, conn, event.Data)
 	case SetCurrentChatEventType:
-		return e.setCurrentChatHandler(conn, event.Data)
+		return e.setCurrentChatHandler(ctx, conn, event.Data)
 	case UnsetCurrentChatEventType:
-		return e.unsetCurrentChatHandler(conn, event.Data)
+		return e.unsetCurrentChatHandler(ctx, conn, event.Data)
 	case CreateMessageEventType:
-		return e.createMessageHandler(conn, event.Data)
+		return e.createMessageHandler(ctx, conn, event.Data)
 	case EditMessageEventType:
 	case DeleteMessageEventType:
 	case UpdateMessagesStatusEventType:
-		return e.updateMessagesStatusHandler(conn, event.Data)
+		return e.updateMessagesStatusHandler(ctx, conn, event.Data)
 	}
 
 	return nil

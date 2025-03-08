@@ -18,7 +18,6 @@ import (
 	"github.com/fasthttp/websocket"
 	"golang.org/x/exp/slices"
 
-	"chat-go/internal/common/domain"
 	"chat-go/internal/infrastructure/connector"
 )
 
@@ -69,8 +68,8 @@ func (c *connectionImpl) IsCurrentChat(chatID uint64) bool {
 	return *c.GetCurrentChat() == chatID
 }
 
-func NewConnection(conn *websocket.Conn, user *domain.User) connector.Connection {
+func NewConnection(conn *websocket.Conn) connector.Connection {
 	return &connectionImpl{
-		Connection: connector.NewWebSocketConnection(conn, user),
+		Connection: connector.NewWebSocketConnection(conn),
 	}
 }

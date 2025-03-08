@@ -54,14 +54,18 @@ func (i *Infrastructure) Init(ctx context.Context) error {
 func (i *Infrastructure) Cleanup(ctx context.Context) error {
 	var err error
 
-	err = i.mockserverContainer.Terminate(ctx)
-	if err != nil {
-		return err
+	if i.mockserverContainer != nil {
+		err = i.mockserverContainer.Terminate(ctx)
+		if err != nil {
+			return err
+		}
 	}
 
-	err = i.postgresContainer.Terminate(ctx)
-	if err != nil {
-		return err
+	if i.postgresContainer != nil {
+		err = i.postgresContainer.Terminate(ctx)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
