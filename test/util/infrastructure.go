@@ -30,7 +30,7 @@ func NewInfrastructure() *Infrastructure {
 	return &Infrastructure{}
 }
 
-func (i *Infrastructure) Init(ctx context.Context) error {
+func (i *Infrastructure) Setup(ctx context.Context) error {
 	var err error
 
 	i.postgresContainer, err = RunPostgresContainer(ctx)
@@ -51,17 +51,17 @@ func (i *Infrastructure) Init(ctx context.Context) error {
 	return nil
 }
 
-func (i *Infrastructure) Cleanup(ctx context.Context) error {
-	var err error
-
-	err = i.mockserverContainer.Terminate(ctx)
-	if err != nil {
-		return err
+func (i *Infrastructure) Teardown(ctx context.Context) error {
+	if i.mockserverContainer != nil {
+		if err := i.mockserverContainer.Terminate(ctx); err != nil {
+			return err
+		}
 	}
 
-	err = i.postgresContainer.Terminate(ctx)
-	if err != nil {
-		return err
+	if i.postgresContainer != nil {
+		if err := i.postgresContainer.Terminate(ctx); err != nil {
+			return err
+		}
 	}
 
 	return nil

@@ -42,7 +42,7 @@ var _ = ginkgo.BeforeSuite(func() {
 	ctx := context.Background()
 
 	infra = util.NewInfrastructure()
-	gomega.Expect(infra.Init(ctx)).Should(gomega.Succeed())
+	gomega.Expect(infra.Setup(ctx)).Should(gomega.Succeed())
 
 	var err error
 
@@ -78,5 +78,5 @@ var _ = ginkgo.BeforeSuite(func() {
 
 var _ = ginkgo.AfterSuite(func() {
 	gomega.Expect(testcontainers.TerminateContainer(chatContainer)).To(gomega.Succeed())
-	gomega.Expect(infra.Cleanup(context.Background())).To(gomega.Succeed())
+	gomega.Expect(infra.Teardown(context.Background())).To(gomega.Succeed())
 })

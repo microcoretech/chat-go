@@ -72,13 +72,16 @@ gomod-download:
 
 ##@ Tests
 
-.PHONY: test-e2e
-test-e2e: gomod-download ginkgo docker-build ## Run e2e tests.
-	$(GINKGO) --race -v $(E2E_TARGET)
+.PHONY: test
+test: test-integration test-e2e ## Run all tests.
 
 .PHONY: test-integration
 test-integration: gomod-download ginkgo ## Run e2e tests.
 	$(GINKGO) --race -v $(INTEGRATION_TARGET)
+
+.PHONY: test-e2e
+test-e2e: gomod-download ginkgo docker-build ## Run e2e tests.
+	$(GINKGO) --race -v $(E2E_TARGET)
 
 ##@ Build
 

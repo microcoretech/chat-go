@@ -20,9 +20,6 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	fibercors "github.com/gofiber/fiber/v2/middleware/cors"
-	fiberlogger "github.com/gofiber/fiber/v2/middleware/logger"
-	fiberrecover "github.com/gofiber/fiber/v2/middleware/recover"
 
 	"chat-go/internal/infrastructure/configs"
 	"chat-go/internal/infrastructure/logger"
@@ -33,38 +30,10 @@ var (
 )
 
 type HTTPServer struct {
-	log logger.Logger
 	cfg *configs.Config
-
 	app *fiber.App
 
-	controllers []Controller
-
 	isStarted bool
-}
-
-func (s *HTTPServer) init() {
-	app := fiber.New(fiber.Config{
-		ErrorHandler: ErrorHandler(s.log, s.cfg.Environment),
-	})
-
-	app.Use(fiberlogger.New(fiberlogger.Config{
-		TimeFormat: time.DateTime,
-		Format:     "{\"status\":${status},\"latency\":\"${latency}\",\"method\":\"${method}\",\"url\":\"${url}\",\"ip\":\"${ip}\"}\n",
-		Output:     s.log.Writer(),
-	}))
-
-	app.Use(fibercors.New())
-	app.Use(fiberrecover.New())
-
-	app.Get("/", rootHandler(s.cfg))
-	app.Get("/healthz", healthzHandler)
-
-	for _, controller := range s.controllers {
-		controller.SetupRoutes(app)
-	}
-
-	s.app = app
 }
 
 func (s *HTTPServer) App() *fiber.App {
@@ -94,13 +63,8 @@ func (s *HTTPServer) Start(ctx context.Context) error {
 }
 
 func NewHTTPServer(cfg *configs.Config, log logger.Logger, controllers ...Controller) *HTTPServer {
-	s := &HTTPServer{
-		cfg:         cfg,
-		log:         log,
-		controllers: controllers,
+	return &HTTPServer{
+		app: NewApp(cfg, log, controllers...),
+		cfg: cfg,
 	}
-
-	s.init()
-
-	return s
 }

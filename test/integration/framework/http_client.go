@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package integration
+package framework
 
 import (
 	"net/http"
@@ -24,13 +24,13 @@ import (
 var _ util.HTTPClient = (*TestHTTPClient)(nil)
 
 type TestHTTPClient struct {
-	env     *TestEnvironment
+	fwk     *Framework
 	timeout *time.Duration
 }
 
-func NewTestHTTPClient(env *TestEnvironment) *TestHTTPClient {
+func NewTestHTTPClient(fwk *Framework) *TestHTTPClient {
 	return &TestHTTPClient{
-		env: env,
+		fwk: fwk,
 	}
 }
 
@@ -44,5 +44,5 @@ func (c *TestHTTPClient) Do(req *http.Request) (*http.Response, error) {
 	if c.timeout != nil {
 		msTimeout = int(c.timeout.Milliseconds())
 	}
-	return c.env.App().Test(req, msTimeout)
+	return c.fwk.App().Test(req, msTimeout)
 }
