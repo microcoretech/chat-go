@@ -44,6 +44,14 @@ var _ = ginkgo.Describe("Chat", func() {
 		}
 	})
 
+	ginkgo.AfterEach(func() {
+		chats := util.GetChats(client, chatURL, util.AdminToken)
+
+		for _, chat := range chats.Items {
+			util.DeleteChat(client, chatURL, util.AdminToken, chat.ID)
+		}
+	})
+
 	ginkgo.Context("root endpoint", func() {
 		ginkgo.It("should return valid response", func() {
 			req, err := http.NewRequest(http.MethodGet, chatURL, nil)
@@ -95,11 +103,6 @@ var _ = ginkgo.Describe("Chat", func() {
 				Type: uint8(chatdomain.GroupChatType),
 			}
 
-			chatResponse := util.CreateChat(client, chatURL, util.AdminToken, createChatRequest)
-			ginkgo.DeferCleanup(func() {
-				util.DeleteChat(client, chatURL, util.AdminToken, chatResponse.ID)
-			})
-
 			gomega.Expect(util.CreateChat(client, chatURL, util.AdminToken, createChatRequest)).To(gomega.BeComparableTo(
 				&chathttp.ChatDto{
 					Name:      "Test Group Chat",
@@ -123,6 +126,40 @@ var _ = ginkgo.Describe("Chat", func() {
 				},
 				cmpopts.IgnoreFields(chathttp.ChatDto{}, "ID", "CreatedAt", "UpdatedAt"),
 				cmpopts.IgnoreFields(chathttp.UserChatDto{}, "ChatID"),
+			))
+		})
+	})
+
+	ginkgo.Context("update chat endpoint", func() {
+		ginkgo.It("should return valid response for updating group chat", func() {
+			createChatRequest := &chathttp.CreateChatDto{
+				Name: "Test Group Chat",
+				Type: uint8(chatdomain.GroupChatType),
+			}
+			createdChat := util.CreateChat(client, chatURL, util.AdminToken, createChatRequest)
+
+			updateChatRequest := &chathttp.UpdateChatDto{
+				ID:   createdChat.ID,
+				Name: "Updated Group Chat",
+				Type: uint8(chatdomain.GroupChatType),
+			}
+
+			expectedChatResponse := chathttp.ChatDto{
+				ID:        createdChat.ID,
+				Name:      "Updated Group Chat",
+				Type:      uint8(chatdomain.GroupChatType),
+				CreatedBy: util.AdminID,
+				UserChats: []chathttp.UserChatDto{
+					{
+						UserID: util.AdminID,
+						ChatID: createdChat.ID,
+					},
+				},
+			}
+
+			gomega.Expect(util.UpdateChat(client, chatURL, util.AdminToken, createdChat.ID, updateChatRequest)).To(gomega.BeComparableTo(
+				&expectedChatResponse,
+				cmpopts.IgnoreFields(chathttp.ChatDto{}, "CreatedAt", "UpdatedAt"),
 			))
 		})
 	})
