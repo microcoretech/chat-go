@@ -29,3 +29,7 @@ type User struct {
 func UserFromContext(ctx context.Context) *User {
 	return ctx.Value("user").(*User)
 }
+
+func TokenFromContext(ctx context.Context) string {
+	return ctx.Value("token").(string)
+}
