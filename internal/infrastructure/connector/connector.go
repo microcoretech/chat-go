@@ -22,6 +22,7 @@ import (
 	"sync"
 	"time"
 
+	"chat-go/internal/common/domain"
 	"chat-go/internal/infrastructure/logger"
 )
 
@@ -29,7 +30,7 @@ var ConnectorAlreadyStarted = errors.New("connector already started")
 
 type Connector interface {
 	Start(ctx context.Context) error
-	AddConnection(conn Connection)
+	AddConnection(ctx context.Context, conn Connection)
 	GetConnections() []Connection
 }
 
@@ -84,12 +85,13 @@ func (c *ConnectorImpl) clean() {
 	c.connections = connections
 }
 
-func (c *ConnectorImpl) AddConnection(conn Connection) {
-	c.log.Debugf("Connected id=%d email=%s username=%s", conn.GetUser().ID, conn.GetUser().Email, conn.GetUser().Username)
+func (c *ConnectorImpl) AddConnection(ctx context.Context, conn Connection) {
+	user := domain.UserFromContext(ctx)
+	c.log.Debugf("Connected id=%q email=%q username=%q", user.ID, user.Email, user.Username)
 	conn.SetConnector(c)
 	conn.Connect()
 	c.addConnection(conn)
-	go c.listen(conn)
+	go c.listen(ctx, conn)
 }
 
 func (c *ConnectorImpl) addConnection(conn Connection) {
@@ -98,18 +100,18 @@ func (c *ConnectorImpl) addConnection(conn Connection) {
 	c.connections = append(c.connections, conn)
 }
 
-func (c *ConnectorImpl) listen(conn Connection) {
+func (c *ConnectorImpl) listen(ctx context.Context, conn Connection) {
 	for {
 		select {
 		case <-conn.GetCloseChan():
 			return
 		case msg := <-conn.GetMessageChan():
-			c.onEvent(conn, msg)
+			c.onEvent(ctx, conn, msg)
 		}
 	}
 }
 
-func (c *ConnectorImpl) onEvent(conn Connection, data []byte) {
+func (c *ConnectorImpl) onEvent(ctx context.Context, conn Connection, data []byte) {
 	defer func() {
 		if r := recover(); r != nil {
 			c.log.Errorf("%s\n%s", r, string(debug.Stack()))
@@ -125,7 +127,7 @@ func (c *ConnectorImpl) onEvent(conn Connection, data []byte) {
 
 	c.log.Debugf("Got new event event_type=%d message=%s", rawEvent.Type, string(rawEvent.Data))
 
-	if err := c.eventHandler.HandleEvent(conn, rawEvent); err != nil {
+	if err := c.eventHandler.HandleEvent(ctx, conn, rawEvent); err != nil {
 		c.log.Error(err)
 	}
 }

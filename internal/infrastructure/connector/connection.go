@@ -14,8 +14,6 @@
 
 package connector
 
-import "chat-go/internal/common/domain"
-
 type Connection interface {
 	IsClosed() bool
 
@@ -31,6 +29,4 @@ type Connection interface {
 
 	Connect()
 	Close()
-
-	GetUser() *domain.User
 }
