@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package integration
+package api
 
 import (
 	"net/http"
@@ -22,6 +22,7 @@ import (
 
 	chatdomain "chat-go/internal/chat/domain"
 	chathttp "chat-go/internal/chat/http"
+	"chat-go/test/integration/framework"
 	"chat-go/test/util"
 )
 
@@ -32,7 +33,7 @@ var _ = ginkgo.Describe("Chat", ginkgo.Ordered, ginkgo.ContinueOnFailure, func()
 	)
 
 	ginkgo.BeforeAll(func() {
-		httpClient = NewTestHTTPClient(env).WithTimeout(util.Timeout)
+		httpClient = framework.NewTestHTTPClient(fwk).WithTimeout(util.Timeout)
 
 		chat = util.CreateChat(httpClient, "", util.AdminToken, &chathttp.CreateChatDto{
 			Name: "Chat",
