@@ -15,9 +15,9 @@
 package framework
 
 import (
-	"chat-go/internal/infrastructure/api"
 	"context"
 	"database/sql"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/onsi/ginkgo/v2/dsl/core"
 	"github.com/sirupsen/logrus"
@@ -27,6 +27,7 @@ import (
 	chatrepository "chat-go/internal/chat/repository"
 	chatwebsocket "chat-go/internal/chat/websocket"
 	"chat-go/internal/common/repository"
+	"chat-go/internal/infrastructure/api"
 	"chat-go/internal/infrastructure/configs"
 	"chat-go/internal/infrastructure/connector"
 	"chat-go/internal/infrastructure/database/postgres"
