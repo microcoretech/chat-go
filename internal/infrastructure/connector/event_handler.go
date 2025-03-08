@@ -14,8 +14,6 @@
 
 package connector
 
-import "context"
-
 type EventHandler interface {
-	HandleEvent(ctx context.Context, conn Connection, rawEvent Event) error
+	HandleEvent(conn Connection, rawEvent Event) error
 }

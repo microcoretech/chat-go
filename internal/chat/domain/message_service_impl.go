@@ -77,10 +77,6 @@ func (s *MessageServiceImpl) GetMessages(ctx context.Context, filter *MessageFil
 }
 
 func (s *MessageServiceImpl) CreateMessage(ctx context.Context, newMessage Message) (*Message, error) {
-	user := domain.UserFromContext(ctx)
-
-	newMessage.CreatedBy = user.ID
-
 	message, err := s.messageRepo.CreateMessage(ctx, newMessage, nil)
 	if err != nil {
 		return nil, err

@@ -15,7 +15,6 @@
 package websocket
 
 import (
-	"context"
 	"encoding/json"
 )
 
@@ -23,7 +22,7 @@ type SubscribeRoomEventData struct {
 	RoomID uint64 `json:"roomId"`
 }
 
-func (e *EventHandler) subscribeChatHandler(_ context.Context, conn Connection, rawData []byte) error {
+func (e *EventHandler) subscribeChatHandler(conn Connection, rawData []byte) error {
 	var chatIDs []uint64
 
 	if err := json.Unmarshal(rawData, &chatIDs); err != nil {
