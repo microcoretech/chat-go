@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package integration
+package framework
 
 import (
 	"context"
@@ -25,6 +25,7 @@ import (
 	chatdomain "chat-go/internal/chat/domain"
 	chathttp "chat-go/internal/chat/http"
 	chatrepository "chat-go/internal/chat/repository"
+	chatwebsocket "chat-go/internal/chat/websocket"
 	"chat-go/internal/common/repository"
 	"chat-go/internal/infrastructure/api"
 	"chat-go/internal/infrastructure/configs"
@@ -57,12 +58,12 @@ type TestEnvironment struct {
 
 	authMiddleware *userhttp.AuthMiddleware
 
+	connector      *connector.ConnectorImpl
 	userController *userhttp.UserController
 	chatController *chathttp.ChatController
+	eventHandler   *chatwebsocket.EventHandler
 
-	connector *connector.ConnectorImpl
-
-	httpServer *api.HTTPServer
+	app *fiber.App
 }
 
 func (e *TestEnvironment) Init(ctx context.Context) error {
@@ -112,19 +113,25 @@ func (e *TestEnvironment) Init(ctx context.Context) error {
 	e.chatService = chatdomain.NewChatServiceImpl(e.baseRepo, e.chatRepo, e.userChatRepo, e.userService)
 	e.userServiceContract = usercontract.NewUserServiceContractImpl(e.userService)
 	e.authMiddleware = userhttp.NewAuthMiddleware(e.userService)
+	e.connector = connector.NewConnector(e.log, e.eventHandler)
 	e.userController = userhttp.NewUserController(e.validate, e.authMiddleware, e.userService)
 	e.chatController = chathttp.NewChatController(e.validate, e.authMiddleware, e.chatService, e.messageService, e.connector)
-	e.httpServer = api.NewHTTPServer(e.cfg, e.log, e.userController, e.chatController)
+	e.app = api.NewApp(e.cfg, e.log, e.userController, e.chatController)
+	e.eventHandler = chatwebsocket.NewEventHandler(e.validate, e.messageService)
 
 	return nil
 }
 
 func (e *TestEnvironment) App() *fiber.App {
-	return e.httpServer.App()
+	return e.app
 }
 
 func (e *TestEnvironment) GetChatController() *chathttp.ChatController {
 	return e.chatController
+}
+
+func (e *TestEnvironment) GetUserController() *userhttp.UserController {
+	return e.userController
 }
 
 func NewTestEnvironment() *TestEnvironment {

@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package integration
+package api
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/onsi/ginkgo/v2"
@@ -22,6 +23,7 @@ import (
 
 	chatdomain "chat-go/internal/chat/domain"
 	chathttp "chat-go/internal/chat/http"
+	"chat-go/test/integration/framework"
 	"chat-go/test/util"
 )
 
@@ -32,7 +34,7 @@ var _ = ginkgo.Describe("Chat", ginkgo.Ordered, ginkgo.ContinueOnFailure, func()
 	)
 
 	ginkgo.BeforeAll(func() {
-		httpClient = NewTestHTTPClient(env).WithTimeout(util.Timeout)
+		httpClient = framework.NewTestHTTPClient(env).WithTimeout(util.Timeout)
 
 		chat = util.CreateChat(httpClient, "", util.AdminToken, &chathttp.CreateChatDto{
 			Name: "Chat",
@@ -65,6 +67,12 @@ var _ = ginkgo.Describe("Chat", ginkgo.Ordered, ginkgo.ContinueOnFailure, func()
 			ginkgo.By("deleting chat", func() {
 				util.DeleteChatWithStatus(httpClient, "", util.UserToken, chat.ID, http.StatusForbidden)
 			})
+		})
+	})
+
+	ginkgo.Context("websocket endpoint", func() {
+		ginkgo.It("should get message", func() {
+			fmt.Println()
 		})
 	})
 })

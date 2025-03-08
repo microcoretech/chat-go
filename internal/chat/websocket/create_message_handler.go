@@ -17,9 +17,13 @@ package websocket
 import (
 	"context"
 	"encoding/json"
+
+	"chat-go/internal/common/domain"
 )
 
-func (e *EventHandler) createMessageHandler(conn Connection, rawData []byte) error {
+func (e *EventHandler) createMessageHandler(ctx context.Context, conn Connection, rawData []byte) error {
+	user := domain.UserFromContext(ctx)
+
 	dto := MessageDto{}
 	if err := json.Unmarshal(rawData, &dto); err != nil {
 		return err
@@ -34,7 +38,7 @@ func (e *EventHandler) createMessageHandler(conn Connection, rawData []byte) err
 
 	newMessage := MessageFromCreateDto(dto)
 	newMessage.ChatID = *chatID
-	newMessage.CreatedBy = conn.GetUser().ID
+	newMessage.CreatedBy = user.ID
 
 	message, err := e.messageService.CreateMessage(context.Background(), newMessage)
 	if err != nil {

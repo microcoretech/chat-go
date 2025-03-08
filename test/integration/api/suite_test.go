@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package integration
+package api
 
 import (
 	"context"
@@ -20,10 +20,12 @@ import (
 
 	"github.com/onsi/ginkgo/v2"
 	"github.com/onsi/gomega"
+
+	"chat-go/test/integration/framework"
 )
 
 var (
-	env *TestEnvironment
+	env *framework.TestEnvironment
 )
 
 func TestAPI(t *testing.T) {
@@ -33,7 +35,7 @@ func TestAPI(t *testing.T) {
 
 var _ = ginkgo.BeforeSuite(func() {
 	ctx := context.Background()
-	env = NewTestEnvironment()
+	env = framework.NewTestEnvironment()
 	gomega.Expect(env.Init(ctx)).Should(gomega.Succeed())
 })
 
