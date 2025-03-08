@@ -14,6 +14,8 @@
 
 package domain
 
+import "context"
+
 type User struct {
 	ID        uint64 `json:"id"`
 	Email     string `json:"email"`
@@ -22,4 +24,8 @@ type User struct {
 	LastName  string `json:"lastName"`
 	AboutMe   string `json:"aboutMe"`
 	Image     Image  `json:"image"`
+}
+
+func UserFromContext(ctx context.Context) *User {
+	return ctx.Value("user").(*User)
 }
