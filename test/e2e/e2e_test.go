@@ -155,7 +155,7 @@ var _ = ginkgo.Describe("Chat", func() {
 				cmpopts.IgnoreFields(chathttp.ChatDto{}, "CreatedAt", "UpdatedAt"),
 			))
 			gomega.Expect(updatedChat.UpdatedAt).ToNot(gomega.BeZero())
-			gomega.Expect(updatedChat.UpdatedAt.After(updatedChat.CreatedAt) || updatedChat.UpdatedAt.Equal(updatedChat.CreatedAt)).To(gomega.BeTrue(), "UpdatedAt should be after or equal to CreatedAt")
+			gomega.Expect(updatedChat.UpdatedAt.After(createdChat.UpdatedAt)).To(gomega.BeTrue(), "updatedChat.UpdatedAt should be after createdChat.UpdatedAt")
 		})
 	})
 })

@@ -347,7 +347,7 @@ func (r *ChatRepoImpl) UpdateChat(ctx context.Context, chat domain.Chat) (*domai
 	query := fmt.Sprintf(`
 	WITH %[1]s AS (
 		UPDATE %[1]s 
-		SET name = $1, image_url = $2
+		SET name = $1, image_url = $2, updated_at = NOW()  
 		WHERE id = $3
 		RETURNING *
 	)
