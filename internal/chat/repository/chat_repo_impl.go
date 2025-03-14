@@ -165,14 +165,14 @@ func (r *ChatRepoImpl) buildGroupBy() string {
 
 func (r *ChatRepoImpl) GetChat(ctx context.Context, id uint64) (*domain.Chat, error) {
 	query := fmt.Sprintf(
-		`SELECT %s 
+		`SELECT %s
 			FROM %s
 			WHERE c.id = $1`,
 		r.buildChatFields(),
 		r.buildFrom(),
 	)
 
-	query = fmt.Sprintf(`%s 
+	query = fmt.Sprintf(`%s
 		GROUP BY %s`, query, r.buildGroupBy())
 
 	rows, err := r.db.QueryContext(ctx, query, id)
@@ -207,7 +207,7 @@ func (r *ChatRepoImpl) GetChats(ctx context.Context, filter *domain.ChatFilter) 
 		query = fmt.Sprintf("%s WHERE %s", query, strings.Join(where, " AND "))
 	}
 
-	query = fmt.Sprintf(`%s 
+	query = fmt.Sprintf(`%s
 		GROUP BY %s`, query, r.buildGroupBy())
 
 	query = fmt.Sprintf(`
@@ -223,17 +223,17 @@ func (r *ChatRepoImpl) GetChats(ctx context.Context, filter *domain.ChatFilter) 
 			filter.Sort.SortDir,
 		)
 	} else {
-		query = fmt.Sprintf(`%s 
+		query = fmt.Sprintf(`%s
 		ORDER BY (COALESCE((last_message->'createdAt')::VARCHAR, '""'::VARCHAR)) DESC, updated_at DESC`, query)
 	}
 
 	if filter.Limit != nil {
-		query = fmt.Sprintf(`%s 
+		query = fmt.Sprintf(`%s
 		LIMIT %d`, query, *filter.Limit)
 	}
 
 	if filter.Offset != nil {
-		query = fmt.Sprintf(`%s 
+		query = fmt.Sprintf(`%s
 		OFFSET %d`, query, *filter.Offset)
 	}
 
@@ -344,8 +344,38 @@ func (r *ChatRepoImpl) CreateChat(ctx context.Context, chat domain.Chat, tx repo
 }
 
 func (r *ChatRepoImpl) UpdateChat(ctx context.Context, chat domain.Chat) (*domain.Chat, error) {
-	// TODO implement me
-	panic("implement me")
+	query := fmt.Sprintf(`
+	WITH %[1]s AS (
+		UPDATE %[1]s 
+		SET name = $1, image_url = $2, updated_at = NOW()  
+		WHERE id = $3
+		RETURNING *
+	)
+	SELECT %[2]s
+	FROM %[3]s
+	GROUP BY %[4]s`,
+		chatTableName,
+		r.buildChatFields(),
+		r.buildFrom(),
+		chatFields,
+	)
+
+	rows, err := r.db.QueryContext(ctx, query, chat.Name, chat.Image.URL, chat.ID)
+	if err != nil {
+		return nil, errors.NewDatabaseError(common.ChatDomain, err, "failed to update chat")
+	}
+	defer rows.Close()
+
+	chats, err := r.scan(rows)
+	if err != nil {
+		return nil, errors.NewDatabaseError(common.ChatDomain, err)
+	}
+
+	if len(chats) == 0 {
+		return nil, nil
+	}
+
+	return &chats[0], nil
 }
 
 func (r *ChatRepoImpl) DeleteChat(ctx context.Context, id uint64) error {

@@ -47,6 +47,7 @@ func (c *ChatController) SetupRoutes(r fiber.Router) {
 	chatGroup.Get("/ws", c.ws)
 	chatGroup.Get("/:id", c.getChat)
 	chatGroup.Get("/:id/messages", c.getChatMessages)
+	chatGroup.Put("/:id", c.update)
 	chatGroup.Post("", c.create)
 	chatGroup.Delete("/:id", c.delete)
 }
@@ -132,6 +133,34 @@ func (c *ChatController) getChatMessages(ctx *fiber.Ctx) error {
 		}),
 		count,
 	))
+}
+
+func (c *ChatController) update(ctx *fiber.Ctx) error {
+	idStr := ctx.Params("id")
+
+	id, err := strconv.ParseUint(idStr, 10, 64)
+	if err != nil {
+		return errors.NewBadRequestError(common.ChatDomain, err, map[string]any{"id": idStr})
+	}
+
+	dto := UpdateChatDto{}
+	if err := ctx.BodyParser(&dto); err != nil {
+		return errors.NewBadRequestError(common.ChatDomain, err, nil)
+	}
+
+	if err := c.validate.Struct(common.ChatDomain, dto); err != nil {
+		return err
+	}
+
+	chat := ChatFromUpdateDto(dto)
+	chat.ID = id
+
+	updatedChat, err := c.chatService.UpdateChat(ctx.Context(), chat)
+	if err != nil {
+		return err
+	}
+
+	return ctx.JSON(ChatToDto(*updatedChat))
 }
 
 func (c *ChatController) create(ctx *fiber.Ctx) error {

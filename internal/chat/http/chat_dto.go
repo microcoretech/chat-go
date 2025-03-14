@@ -29,9 +29,7 @@ type CreateChatDto struct {
 }
 
 type UpdateChatDto struct {
-	ID    uint64       `json:"id" validate:"omitempty,gte=0"`
 	Name  string       `json:"name" validate:"lte=255"`
-	Type  uint8        `json:"type" validate:"required,oneof=1 2"`
 	Image domain.Image `json:"image"`
 }
 

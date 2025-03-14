@@ -42,7 +42,6 @@ func ChatFromCreateDto(dto CreateChatDto) (*domain.Chat, error) {
 
 func ChatFromUpdateDto(dto UpdateChatDto) domain.Chat {
 	return domain.Chat{
-		ID:    dto.ID,
 		Name:  dto.Name,
 		Image: dto.Image,
 	}
