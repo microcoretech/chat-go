@@ -4,7 +4,7 @@ go 1.23.0
 
 require (
 	github.com/caarlos0/env/v11 v11.3.1
-	github.com/docker/docker v27.2.0+incompatible
+	github.com/docker/docker v28.0.1+incompatible
 	github.com/fasthttp/websocket v1.5.12
 	github.com/go-playground/validator/v10 v10.25.0
 	github.com/gofiber/contrib/websocket v1.3.3
