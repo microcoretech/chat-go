@@ -14,28 +14,18 @@
 
 PROJECT_DIR := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
 BIN_DIR ?= $(PROJECT_DIR)/bin
-ARTIFACTS ?= $(PROJECT_DIR)/bin
 TOOLS_DIR := $(PROJECT_DIR)/hack/tools
-BIN_DIR ?= $(PROJECT_DIR)/bin
-ARTIFACTS_DIR ?= $(PROJECT_DIR)/artifacts
 
 E2E_TARGET ?= $(PROJECT_DIR)/test/e2e/...
 INTEGRATION_TARGET ?= $(PROJECT_DIR)/test/integration/...
 
-BINARY ?= chat-go
-IMAGE_NAME ?= chat-go
-
 GIT_TAG ?= $(shell git describe --tags --dirty --always)
 
 BINARY ?= chat-go
-DOCKER_BUILDX_CMD ?= docker buildx
-IMAGE_BUILD_CMD ?= $(DOCKER_BUILDX_CMD) build
-IMAGE_BUILD_EXTRA_OPTS ?=
-IMAGE_REGISTRY ?= mykhailobobrovskyi
+IMAGE_REGISTRY ?= microcoretech
 IMAGE_NAME ?= chat-go
 IMAGE_REPO ?= $(IMAGE_REGISTRY)/$(IMAGE_NAME)
 IMAGE_TAG ?= $(IMAGE_REPO):$(GIT_TAG)
-PLATFORMS ?= linux/amd64,linux/arm64
 
 GO_CMD ?= go
 GINKGO ?= $(BIN_DIR)/ginkgo
@@ -81,7 +71,7 @@ test-integration: gomod-download ginkgo ## Run e2e tests.
 
 .PHONY: test-e2e
 test-e2e: gomod-download ginkgo docker-build ## Run e2e tests.
-	$(GINKGO) --race -v $(E2E_TARGET)
+	IMAGE_TAG=$(IMAGE_TAG) $(GINKGO) -v $(E2E_TARGET)
 
 ##@ Build
 
@@ -91,7 +81,7 @@ build:
 
 .PHONY: docker-build
 docker-build:
-	docker build -t $(IMAGE_NAME) .
+	docker build -t $(IMAGE_TAG) .
 
 ##@ Tools
 GOLANGCI_LINT = $(PROJECT_DIR)/bin/golangci-lint
