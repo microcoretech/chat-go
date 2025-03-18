@@ -16,5 +16,4 @@ package tools
 
 import (
 	_ "github.com/golangci/golangci-lint/pkg/exitcodes"
-	_ "github.com/onsi/ginkgo/v2/ginkgo/run"
 )
