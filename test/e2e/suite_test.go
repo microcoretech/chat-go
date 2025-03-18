@@ -54,7 +54,7 @@ var _ = ginkgo.BeforeSuite(func() {
 
 	chatContainer, err = testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
 		ContainerRequest: testcontainers.ContainerRequest{
-			Image:        util.ChatImage,
+			Image:        util.ImageTag(),
 			ExposedPorts: []string{"8080/tcp"},
 			WaitingFor:   wait.ForHTTP("/").WithPort("8080/tcp"),
 			Env: map[string]string{

@@ -14,20 +14,14 @@
 
 package util
 
-import "time"
-
-const (
-	Timeout = time.Second
+import (
+	"os"
 )
 
 const (
-	AdminID       = 1
-	AdminEmail    = "admin@gmail.com"
-	AdminUsername = "admin"
-	AdminToken    = "admin"
-
-	UserID       = 2
-	UserEmail    = "user@gmail.com"
-	UserUsername = "user"
-	UserToken    = "user"
+	imageTagEnv = "IMAGE_TAG"
 )
+
+func ImageTag() string {
+	return os.Getenv(imageTagEnv)
+}
