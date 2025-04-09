@@ -19,7 +19,7 @@ require (
 	github.com/samber/lo v1.49.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/testcontainers/testcontainers-go v0.36.0
-	github.com/testcontainers/testcontainers-go/modules/mockserver v0.35.0
+	github.com/testcontainers/testcontainers-go/modules/mockserver v0.36.0
 	github.com/testcontainers/testcontainers-go/modules/postgres v0.36.0
 	golang.org/x/exp v0.0.0-20250210185358-939b2ce775ac
 	golang.org/x/sync v0.12.0
