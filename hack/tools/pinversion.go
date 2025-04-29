@@ -15,5 +15,5 @@
 package tools
 
 import (
-	_ "github.com/golangci/golangci-lint/pkg/exitcodes"
+	_ "github.com/golangci/golangci-lint/v2/pkg/exitcodes"
 )

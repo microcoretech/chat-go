@@ -25,7 +25,7 @@ import (
 	"chat-go/internal/infrastructure/logger"
 )
 
-var ConnectorAlreadyStarted = errors.New("connector already started")
+var ErrConnectorAlreadyStarted = errors.New("connector already started")
 
 type Connector interface {
 	Start(ctx context.Context) error
@@ -43,7 +43,7 @@ type ConnectorImpl struct {
 
 func (c *ConnectorImpl) Start(ctx context.Context) error {
 	if c.isStarted {
-		return ConnectorAlreadyStarted
+		return ErrConnectorAlreadyStarted
 	}
 
 	c.isStarted = true
