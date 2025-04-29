@@ -26,7 +26,7 @@ import (
 )
 
 var (
-	ServerAlreadyStartedError = errors.New("server already started")
+	ErrServerAlreadyStarted = errors.New("server already started")
 )
 
 type HTTPServer struct {
@@ -42,7 +42,7 @@ func (s *HTTPServer) App() *fiber.App {
 
 func (s *HTTPServer) Start(ctx context.Context) error {
 	if s.isStarted {
-		return ServerAlreadyStartedError
+		return ErrServerAlreadyStarted
 	}
 
 	s.isStarted = true

@@ -90,7 +90,7 @@ func (f *Framework) Setup(ctx context.Context) error {
 	}
 	f.log.SetOutput(core.GinkgoWriter)
 
-	f.cfg.PostgresURI, err = util.PostgresURIForContainer(ctx, f.Infrastructure.PostgresContainer())
+	f.cfg.PostgresURI, err = util.PostgresURIForContainer(ctx, f.PostgresContainer())
 	if err != nil {
 		return err
 	}
