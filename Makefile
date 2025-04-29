@@ -27,12 +27,9 @@ IMAGE_NAME ?= chat-go
 IMAGE_REPO ?= $(IMAGE_REGISTRY)/$(IMAGE_NAME)
 IMAGE_TAG ?= $(IMAGE_REPO):$(GIT_TAG)
 
-GO_CMD ?= go
-GINKGO ?= $(BIN_DIR)/ginkgo
-
-# Use go.mod go version as source.
-GOLANGCI_LINT_VERSION ?= $(shell cd $(TOOLS_DIR); $(GO_CMD) list -m -f '{{.Version}}' github.com/golangci/golangci-lint/v2)
-GINKGO_VERSION ?= $(shell $(GO_CMD) list -m -f '{{.Version}}' github.com/onsi/ginkgo/v2)
+GO ?= go
+GOLANGCI_LINT ?= $(GO) tool github.com/golangci/golangci-lint/v2/cmd/golangci-lint
+GINKGO ?= $(GO) tool github.com/onsi/ginkgo/v2/ginkgo
 
 .PHONY: help
 help: ## Display this help.
@@ -45,20 +42,20 @@ verify: gomod-verify ci-lint
 
 .PHONY: gomod-verify
 gomod-verify:
-	$(GO_CMD) mod tidy
+	$(GO) mod tidy
 	git --no-pager diff --exit-code go.mod go.sum
 
 .PHONY: ci-lint
-ci-lint: golangci-lint
+ci-lint:
 	$(GOLANGCI_LINT) run --timeout 15m0s
 
 .PHONY: lint-fix
-lint-fix: golangci-lint
+lint-fix:
 	$(GOLANGCI_LINT) run --fix --timeout 15m0s
 
 .PHONY: gomod-download
 gomod-download:
-	$(GO_CMD) mod download
+	$(GO) mod download
 
 ##@ Tests
 
@@ -66,29 +63,19 @@ gomod-download:
 test: test-integration test-e2e ## Run all tests.
 
 .PHONY: test-integration
-test-integration: gomod-download ginkgo ## Run e2e tests.
+test-integration: gomod-download ## Run e2e tests.
 	$(GINKGO) --race -v $(INTEGRATION_TARGET)
 
 .PHONY: test-e2e
-test-e2e: gomod-download ginkgo docker-build ## Run e2e tests.
+test-e2e: gomod-download docker-build ## Run e2e tests.
 	IMAGE_TAG=$(IMAGE_TAG) $(GINKGO) -v $(E2E_TARGET)
 
 ##@ Build
 
 .PHONY: build
 build:
-	$(GO_CMD) build -o $(BIN_DIR)/$(BINARY) $(PROJECT_DIR)/cmd/chat/main.go
+	$(GO) build -o $(BIN_DIR)/$(BINARY) $(PROJECT_DIR)/cmd/chat/main.go
 
 .PHONY: docker-build
 docker-build:
 	docker build -t $(IMAGE_TAG) .
-
-##@ Tools
-GOLANGCI_LINT = $(PROJECT_DIR)/bin/golangci-lint
-.PHONY: golangci-lint
-golangci-lint: ## Download golangci-lint locally if necessary.
-	@GOBIN=$(PROJECT_DIR)/bin GO111MODULE=on $(GO_CMD) install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@$(GOLANGCI_LINT_VERSION)
-
-.PHONY: ginkgo
-ginkgo: ## Download ginkgo locally if necessary.
-	@GOBIN=$(BIN_DIR) GO111MODULE=on $(GO_CMD) install github.com/onsi/ginkgo/v2/ginkgo@$(GINKGO_VERSION)
