@@ -1,3 +1,6 @@
+//go:build tools
+// +build tools
+
 // Copyright 2025 Mykhailo Bobrovskyi
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
