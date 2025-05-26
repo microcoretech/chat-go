@@ -8,7 +8,7 @@ require (
 	github.com/fasthttp/websocket v1.5.12
 	github.com/go-playground/validator/v10 v10.26.0
 	github.com/gofiber/contrib/websocket v1.3.4
-	github.com/gofiber/fiber/v2 v2.52.7
+	github.com/gofiber/fiber/v2 v2.52.8
 	github.com/golang-migrate/migrate/v4 v4.18.3
 	github.com/golangci/golangci-lint/v2 v2.1.6
 	github.com/google/go-cmp v0.7.0
