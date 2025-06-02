@@ -4,7 +4,7 @@ go 1.24.1
 
 require (
 	github.com/caarlos0/env/v11 v11.3.1
-	github.com/docker/docker v28.1.1+incompatible
+	github.com/docker/docker v28.2.2+incompatible
 	github.com/fasthttp/websocket v1.5.12
 	github.com/go-playground/validator/v10 v10.26.0
 	github.com/gofiber/contrib/websocket v1.3.4
@@ -72,6 +72,8 @@ require (
 	github.com/charmbracelet/x/term v0.2.1 // indirect
 	github.com/chavacava/garif v0.1.0 // indirect
 	github.com/ckaznocha/intrange v0.3.1 // indirect
+	github.com/containerd/errdefs v1.0.0 // indirect
+	github.com/containerd/errdefs/pkg v0.3.0 // indirect
 	github.com/containerd/log v0.1.0 // indirect
 	github.com/containerd/platforms v0.2.1 // indirect
 	github.com/cpuguy83/dockercfg v0.3.2 // indirect
