@@ -24,11 +24,11 @@ import (
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 
-	"chat-go/test/util"
+	"chat-go/test/helpers"
 )
 
 var (
-	infra         *util.Infrastructure
+	infra         *helpers.Infrastructure
 	chatContainer testcontainers.Container
 	chatURL       string
 )
@@ -41,7 +41,7 @@ func TestAPI(t *testing.T) {
 var _ = ginkgo.BeforeSuite(func() {
 	ctx := context.Background()
 
-	infra = util.NewInfrastructure()
+	infra = helpers.NewInfrastructure()
 	gomega.Expect(infra.Setup(ctx)).Should(gomega.Succeed())
 
 	var err error
@@ -54,13 +54,13 @@ var _ = ginkgo.BeforeSuite(func() {
 
 	chatContainer, err = testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
 		ContainerRequest: testcontainers.ContainerRequest{
-			Image:        util.ImageTag(),
+			Image:        helpers.ImageTag(),
 			ExposedPorts: []string{"8080/tcp"},
 			WaitingFor:   wait.ForHTTP("/").WithPort("8080/tcp"),
 			Env: map[string]string{
-				"POSTGRES_URI":              util.BuildPostgresURI(postgresContainerIP, "5432"),
-				"GET_CURRENT_USER_ENDPOINT": util.BuildGetCurrentUserEndpoint(mockserverContainerIP, "1080"),
-				"GET_USERS_ENDPOINT":        util.BuildGetUsersEndpoint(mockserverContainerIP, "1080"),
+				"POSTGRES_URI":              helpers.BuildPostgresURI(postgresContainerIP, "5432"),
+				"GET_CURRENT_USER_ENDPOINT": helpers.BuildGetCurrentUserEndpoint(mockserverContainerIP, "1080"),
+				"GET_USERS_ENDPOINT":        helpers.BuildGetUsersEndpoint(mockserverContainerIP, "1080"),
 			},
 		},
 		Started: true,

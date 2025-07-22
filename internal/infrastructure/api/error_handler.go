@@ -22,7 +22,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	chaterrors "chat-go/internal/chat/errors"
-	"chat-go/internal/common/common"
+	"chat-go/internal/common/constants"
 	"chat-go/internal/common/errors"
 	"chat-go/internal/infrastructure/configs"
 	"chat-go/internal/infrastructure/logger"
@@ -38,7 +38,7 @@ func ErrorHandler(log logger.Logger, environment configs.Environment) fiber.Erro
 			fiberErr := errType
 			statusCode = fiberErr.Code
 			if statusCode == http.StatusNotFound {
-				err = errors.NewNotFoundError(common.CommonDomain)
+				err = errors.NewNotFoundError(constants.CommonDomain)
 			}
 		case
 			*errors.BadRequestError,

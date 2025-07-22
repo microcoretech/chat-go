@@ -18,7 +18,7 @@ import (
 	"context"
 	"encoding/json"
 
-	"chat-go/internal/chat/common"
+	"chat-go/internal/chat/constants"
 	"chat-go/internal/chat/domain"
 )
 
@@ -29,7 +29,7 @@ func (e *EventHandler) updateMessagesStatusHandler(conn Connection, rawData []by
 		return err
 	}
 
-	if err := e.validate.Struct(common.ChatDomain, dto); err != nil {
+	if err := e.validate.Struct(constants.ChatDomain, dto); err != nil {
 		return err
 	}
 

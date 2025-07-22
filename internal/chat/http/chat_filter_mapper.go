@@ -15,7 +15,7 @@
 package http
 
 import (
-	"chat-go/internal/chat/common"
+	"chat-go/internal/chat/constants"
 	"chat-go/internal/chat/domain"
 	"chat-go/internal/common/errors"
 	"chat-go/internal/common/http"
@@ -34,7 +34,7 @@ func ChatFilterFromQuery(query ChatQuery) (domain.ChatFilter, error) {
 	sort, err := http.SortFromDto(query.Sort, chatSortFields)
 	if err != nil {
 		return domain.ChatFilter{}, errors.NewBadRequestError(
-			common.ChatDomain, err, map[string]any{"sort": query.Sort})
+			constants.ChatDomain, err, map[string]any{"sort": query.Sort})
 	}
 
 	return domain.ChatFilter{

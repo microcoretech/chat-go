@@ -12,6 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package common
+package helpers
 
-const UserDomain = "user"
+import "time"
+
+const (
+	Timeout = time.Second
+)
+
+const (
+	AdminID       = 1
+	AdminEmail    = "admin@gmail.com"
+	AdminUsername = "admin"
+	AdminToken    = "admin"
+
+	UserID       = 2
+	UserEmail    = "user@gmail.com"
+	UserUsername = "user"
+	UserToken    = "user"
+)

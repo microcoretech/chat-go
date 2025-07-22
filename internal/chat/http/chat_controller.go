@@ -22,7 +22,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/samber/lo"
 
-	"chat-go/internal/chat/common"
+	"chat-go/internal/chat/constants"
 	chatdomain "chat-go/internal/chat/domain"
 	chatwebsocket "chat-go/internal/chat/websocket"
 	"chat-go/internal/common/domain"
@@ -56,11 +56,11 @@ func (c *ChatController) getChats(ctx *fiber.Ctx) error {
 	var query ChatQuery
 
 	if err := ctx.QueryParser(&query); err != nil {
-		return errors.NewBadRequestError(common.ChatDomain, err, nil)
+		return errors.NewBadRequestError(constants.ChatDomain, err, nil)
 	}
 
-	if err := c.validate.Struct(common.ChatDomain, &query); err != nil {
-		return errors.NewValidationError(common.ChatDomain, err, nil)
+	if err := c.validate.Struct(constants.ChatDomain, &query); err != nil {
+		return errors.NewValidationError(constants.ChatDomain, err, nil)
 	}
 
 	chatFilter, err := ChatFilterFromQuery(query)
@@ -86,7 +86,7 @@ func (c *ChatController) getChat(ctx *fiber.Ctx) error {
 
 	id, err := strconv.ParseUint(idStr, 10, 64)
 	if err != nil {
-		return errors.NewBadRequestError(common.ChatDomain, err, map[string]any{"id": idStr})
+		return errors.NewBadRequestError(constants.ChatDomain, err, map[string]any{"id": idStr})
 	}
 
 	chat, err := c.chatService.GetChat(ctx.Context(), id)
@@ -102,17 +102,17 @@ func (c *ChatController) getChatMessages(ctx *fiber.Ctx) error {
 
 	id, err := strconv.ParseUint(idStr, 10, 64)
 	if err != nil {
-		return errors.NewBadRequestError(common.ChatDomain, err, map[string]any{"id": idStr})
+		return errors.NewBadRequestError(constants.ChatDomain, err, map[string]any{"id": idStr})
 	}
 
 	var query MessageQuery
 
 	if err := ctx.QueryParser(&query); err != nil {
-		return errors.NewBadRequestError(common.ChatDomain, err, nil)
+		return errors.NewBadRequestError(constants.ChatDomain, err, nil)
 	}
 
-	if err := c.validate.Struct(common.ChatDomain, &query); err != nil {
-		return errors.NewValidationError(common.ChatDomain, err, nil)
+	if err := c.validate.Struct(constants.ChatDomain, &query); err != nil {
+		return errors.NewValidationError(constants.ChatDomain, err, nil)
 	}
 
 	messageFilter, err := MessageFilterFromQuery(query)
@@ -140,15 +140,15 @@ func (c *ChatController) update(ctx *fiber.Ctx) error {
 
 	id, err := strconv.ParseUint(idStr, 10, 64)
 	if err != nil {
-		return errors.NewBadRequestError(common.ChatDomain, err, map[string]any{"id": idStr})
+		return errors.NewBadRequestError(constants.ChatDomain, err, map[string]any{"id": idStr})
 	}
 
 	dto := UpdateChatDto{}
 	if err := ctx.BodyParser(&dto); err != nil {
-		return errors.NewBadRequestError(common.ChatDomain, err, nil)
+		return errors.NewBadRequestError(constants.ChatDomain, err, nil)
 	}
 
-	if err := c.validate.Struct(common.ChatDomain, dto); err != nil {
+	if err := c.validate.Struct(constants.ChatDomain, dto); err != nil {
 		return err
 	}
 
@@ -166,10 +166,10 @@ func (c *ChatController) update(ctx *fiber.Ctx) error {
 func (c *ChatController) create(ctx *fiber.Ctx) error {
 	dto := CreateChatDto{}
 	if err := ctx.BodyParser(&dto); err != nil {
-		return errors.NewBadRequestError(common.ChatDomain, err, nil)
+		return errors.NewBadRequestError(constants.ChatDomain, err, nil)
 	}
 
-	if err := c.validate.Struct(common.ChatDomain, dto); err != nil {
+	if err := c.validate.Struct(constants.ChatDomain, dto); err != nil {
 		return err
 	}
 
@@ -191,7 +191,7 @@ func (c *ChatController) delete(ctx *fiber.Ctx) error {
 
 	id, err := strconv.ParseUint(idStr, 10, 64)
 	if err != nil {
-		return errors.NewBadRequestError(common.ChatDomain, err, map[string]any{"id": idStr})
+		return errors.NewBadRequestError(constants.ChatDomain, err, map[string]any{"id": idStr})
 	}
 
 	err = c.chatService.DeleteChat(ctx.Context(), id)

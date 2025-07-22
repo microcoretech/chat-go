@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"strings"
 
-	"chat-go/internal/chat/common"
+	"chat-go/internal/chat/constants"
 	"chat-go/internal/chat/domain"
 	"chat-go/internal/common/errors"
 	"chat-go/internal/common/repository"
@@ -80,7 +80,7 @@ func (r *UserChatRepoImpl) CreateUserChats(ctx context.Context, userChats []doma
 	}
 
 	if err != nil {
-		return errors.NewDatabaseError(common.ChatDomain, err)
+		return errors.NewDatabaseError(constants.ChatDomain, err)
 	}
 
 	defer rows.Close()

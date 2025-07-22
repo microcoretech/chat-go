@@ -15,7 +15,7 @@
 package errors
 
 import (
-	"chat-go/internal/common/common"
+	"chat-go/internal/common/constants"
 )
 
 const UnauthorizedErrorType = "UnauthorizedError"
@@ -26,6 +26,6 @@ type UnauthorizedError struct {
 
 func NewUnauthorizedError(devDetails ...string) *UnauthorizedError {
 	return &UnauthorizedError{
-		ErrorData: NewErrorData(common.CommonDomain, UnauthorizedErrorType, nil, nil, devDetails...),
+		ErrorData: NewErrorData(constants.CommonDomain, UnauthorizedErrorType, nil, nil, devDetails...),
 	}
 }

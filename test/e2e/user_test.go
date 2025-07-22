@@ -24,15 +24,15 @@ import (
 	"github.com/onsi/gomega"
 
 	commonhttp "chat-go/internal/common/http"
-	"chat-go/test/util"
+	"chat-go/test/helpers"
 )
 
 var _ = ginkgo.Describe("User", func() {
-	var client util.HTTPClient
+	var client helpers.HTTPClient
 
 	ginkgo.BeforeEach(func() {
 		client = &http.Client{
-			Timeout: util.Timeout,
+			Timeout: helpers.Timeout,
 		}
 	})
 
@@ -41,7 +41,7 @@ var _ = ginkgo.Describe("User", func() {
 			req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/users/current", chatURL), nil)
 			gomega.Expect(err).NotTo(gomega.HaveOccurred())
 
-			req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", util.AdminToken))
+			req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", helpers.AdminToken))
 
 			resp, err := client.Do(req)
 			gomega.Expect(err).NotTo(gomega.HaveOccurred())
@@ -59,9 +59,9 @@ var _ = ginkgo.Describe("User", func() {
 			gomega.Expect(err).NotTo(gomega.HaveOccurred())
 
 			gomega.Expect(user).To(gomega.BeComparableTo(&commonhttp.UserDto{
-				ID:       util.AdminID,
-				Email:    util.AdminEmail,
-				Username: util.AdminUsername,
+				ID:       helpers.AdminID,
+				Email:    helpers.AdminEmail,
+				Username: helpers.AdminUsername,
 			}))
 		})
 	})
@@ -71,7 +71,7 @@ var _ = ginkgo.Describe("User", func() {
 			req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/users", chatURL), nil)
 			gomega.Expect(err).NotTo(gomega.HaveOccurred())
 
-			req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", util.AdminToken))
+			req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", helpers.AdminToken))
 
 			resp, err := client.Do(req)
 			gomega.Expect(err).NotTo(gomega.HaveOccurred())
@@ -91,14 +91,14 @@ var _ = ginkgo.Describe("User", func() {
 			gomega.Expect(page).To(gomega.BeComparableTo(commonhttp.Page[commonhttp.UserDto]{
 				Items: []commonhttp.UserDto{
 					{
-						ID:       util.AdminID,
-						Email:    util.AdminEmail,
-						Username: util.AdminUsername,
+						ID:       helpers.AdminID,
+						Email:    helpers.AdminEmail,
+						Username: helpers.AdminUsername,
 					},
 					{
-						ID:       util.UserID,
-						Email:    util.UserEmail,
-						Username: util.UserUsername,
+						ID:       helpers.UserID,
+						Email:    helpers.UserEmail,
+						Username: helpers.UserUsername,
 					},
 				},
 				Count: 2,

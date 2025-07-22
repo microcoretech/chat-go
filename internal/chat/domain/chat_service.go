@@ -19,7 +19,7 @@ import (
 
 	"golang.org/x/exp/maps"
 
-	"chat-go/internal/chat/common"
+	"chat-go/internal/chat/constants"
 	chaterrors "chat-go/internal/chat/errors"
 	"chat-go/internal/common/domain"
 	"chat-go/internal/common/errors"
@@ -82,7 +82,7 @@ func (s *ChatServiceImpl) GetChat(ctx context.Context, id uint64) (*Chat, error)
 	}
 
 	if chat == nil {
-		return nil, errors.NewNotFoundError(common.ChatDomain)
+		return nil, errors.NewNotFoundError(constants.ChatDomain)
 	}
 
 	if err := s.fillChat(ctx, chat); err != nil {
@@ -181,7 +181,7 @@ func (s *ChatServiceImpl) UpdateChat(ctx context.Context, chat Chat) (*Chat, err
 	}
 
 	if existingChat == nil {
-		return nil, errors.NewNotFoundError(common.ChatDomain)
+		return nil, errors.NewNotFoundError(constants.ChatDomain)
 	}
 
 	if existingChat.CreatedBy != user.ID {
@@ -194,7 +194,7 @@ func (s *ChatServiceImpl) UpdateChat(ctx context.Context, chat Chat) (*Chat, err
 	}
 
 	if updatedChat == nil {
-		return nil, errors.NewNotFoundError(common.ChatDomain)
+		return nil, errors.NewNotFoundError(constants.ChatDomain)
 	}
 
 	return updatedChat, nil
@@ -209,7 +209,7 @@ func (s *ChatServiceImpl) DeleteChat(ctx context.Context, id uint64) error {
 	}
 
 	if chat == nil {
-		return errors.NewNotFoundError(common.ChatDomain)
+		return errors.NewNotFoundError(constants.ChatDomain)
 	}
 
 	if chat.CreatedBy != user.ID {

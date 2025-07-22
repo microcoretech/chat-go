@@ -15,7 +15,7 @@
 package errors
 
 import (
-	"chat-go/internal/chat/common"
+	"chat-go/internal/chat/constants"
 	"chat-go/internal/common/errors"
 )
 
@@ -27,6 +27,6 @@ type InvalidChatNameError struct {
 
 func NewInvalidChatNameError() *InvalidChatNameError {
 	return &InvalidChatNameError{
-		ErrorData: errors.NewErrorData(common.ChatDomain, InvalidChatNameErrorType, nil, nil),
+		ErrorData: errors.NewErrorData(constants.ChatDomain, InvalidChatNameErrorType, nil, nil),
 	}
 }

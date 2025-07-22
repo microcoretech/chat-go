@@ -18,10 +18,10 @@ import (
 	"net/http"
 	"time"
 
-	"chat-go/test/util"
+	"chat-go/test/helpers"
 )
 
-var _ util.HTTPClient = (*TestHTTPClient)(nil)
+var _ helpers.HTTPClient = (*TestHTTPClient)(nil)
 
 type TestHTTPClient struct {
 	fwk     *Framework

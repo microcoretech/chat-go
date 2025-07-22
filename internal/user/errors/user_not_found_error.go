@@ -16,7 +16,7 @@ package errors
 
 import (
 	"chat-go/internal/common/errors"
-	"chat-go/internal/user/common"
+	"chat-go/internal/user/constants"
 )
 
 const UserNotFoundErrorType = "UserNotFoundError"
@@ -27,6 +27,6 @@ type UserNotFoundError struct {
 
 func NewUserNotFoundError(data map[string]any) *UserNotFoundError {
 	return &UserNotFoundError{
-		ErrorData: errors.NewErrorData(common.UserDomain, UserNotFoundErrorType, nil, data),
+		ErrorData: errors.NewErrorData(constants.UserDomain, UserNotFoundErrorType, nil, data),
 	}
 }
