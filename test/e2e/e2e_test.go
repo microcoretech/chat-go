@@ -29,21 +29,21 @@ import (
 
 	chatdomain "chat-go/internal/chat/domain"
 	chathttp "chat-go/internal/chat/http"
-	"chat-go/internal/common/common"
+	"chat-go/internal/common/constants"
 	commonhttp "chat-go/internal/common/http"
 	"chat-go/internal/infrastructure/api"
-	"chat-go/test/util"
+	"chat-go/test/helpers"
 )
 
 var _ = ginkgo.Describe("Chat", func() {
-	var client util.HTTPClient
+	var client helpers.HTTPClient
 
 	ginkgo.BeforeEach(func() {
 		client = &http.Client{
-			Timeout: util.Timeout,
+			Timeout: helpers.Timeout,
 		}
 
-		util.RemoveAllChats(client, chatURL, util.AdminToken)
+		helpers.RemoveAllChats(client, chatURL, helpers.AdminToken)
 	})
 
 	ginkgo.Context("root endpoint", func() {
@@ -61,14 +61,14 @@ var _ = ginkgo.Describe("Chat", func() {
 			gotRootResponse := &api.RootResponse{}
 			gomega.Expect(json.Unmarshal(body, gotRootResponse)).To(gomega.Succeed())
 
-			projectDir, err := util.GetProjectDir()
+			projectDir, err := helpers.GetProjectDir()
 			gomega.Expect(err).NotTo(gomega.HaveOccurred())
 
 			fileVersion, err := os.ReadFile(filepath.Join(projectDir, "VERSION"))
 			gomega.Expect(err).NotTo(gomega.HaveOccurred())
 
 			wantRootResponse := &api.RootResponse{
-				Service: common.ServiceName,
+				Service: constants.ServiceName,
 				Version: string(fileVersion),
 			}
 			gomega.Expect(gotRootResponse).To(gomega.BeComparableTo(wantRootResponse))
@@ -97,23 +97,23 @@ var _ = ginkgo.Describe("Chat", func() {
 				Type: uint8(chatdomain.GroupChatType),
 			}
 
-			gomega.Expect(util.CreateChat(client, chatURL, util.AdminToken, createChatRequest)).To(gomega.BeComparableTo(
+			gomega.Expect(helpers.CreateChat(client, chatURL, helpers.AdminToken, createChatRequest)).To(gomega.BeComparableTo(
 				&chathttp.ChatDto{
 					Name:      "Test Group Chat",
 					Type:      uint8(chatdomain.GroupChatType),
-					CreatedBy: util.AdminID,
+					CreatedBy: helpers.AdminID,
 					Creator: &commonhttp.UserDto{
-						ID:       util.AdminID,
-						Email:    util.AdminEmail,
-						Username: util.AdminUsername,
+						ID:       helpers.AdminID,
+						Email:    helpers.AdminEmail,
+						Username: helpers.AdminUsername,
 					},
 					UserChats: []chathttp.UserChatDto{
 						{
-							UserID: util.AdminID,
+							UserID: helpers.AdminID,
 							User: &commonhttp.UserDto{
-								ID:       util.AdminID,
-								Email:    util.AdminEmail,
-								Username: util.AdminUsername,
+								ID:       helpers.AdminID,
+								Email:    helpers.AdminEmail,
+								Username: helpers.AdminUsername,
 							},
 						},
 					},
@@ -130,7 +130,7 @@ var _ = ginkgo.Describe("Chat", func() {
 				Name: "Test Group Chat",
 				Type: uint8(chatdomain.GroupChatType),
 			}
-			createdChat := util.CreateChat(client, chatURL, util.AdminToken, createChatRequest)
+			createdChat := helpers.CreateChat(client, chatURL, helpers.AdminToken, createChatRequest)
 
 			updateChatRequest := &chathttp.UpdateChatDto{
 				Name: "Updated Group Chat",
@@ -140,16 +140,16 @@ var _ = ginkgo.Describe("Chat", func() {
 				ID:        createdChat.ID,
 				Name:      "Updated Group Chat",
 				Type:      uint8(chatdomain.GroupChatType),
-				CreatedBy: util.AdminID,
+				CreatedBy: helpers.AdminID,
 				UserChats: []chathttp.UserChatDto{
 					{
-						UserID: util.AdminID,
+						UserID: helpers.AdminID,
 						ChatID: createdChat.ID,
 					},
 				},
 			}
 
-			updatedChat := util.UpdateChat(client, chatURL, util.AdminToken, createdChat.ID, updateChatRequest, http.StatusOK)
+			updatedChat := helpers.UpdateChat(client, chatURL, helpers.AdminToken, createdChat.ID, updateChatRequest, http.StatusOK)
 			gomega.Expect(updatedChat).To(gomega.BeComparableTo(
 				&expectedChatResponse,
 				cmpopts.IgnoreFields(chathttp.ChatDto{}, "CreatedAt", "UpdatedAt"),

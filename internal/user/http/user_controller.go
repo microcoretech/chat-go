@@ -25,7 +25,7 @@ import (
 	"chat-go/internal/common/http"
 	"chat-go/internal/infrastructure/api"
 	"chat-go/internal/infrastructure/validator"
-	"chat-go/internal/user/common"
+	"chat-go/internal/user/constants"
 	usererrors "chat-go/internal/user/errors"
 )
 
@@ -52,11 +52,11 @@ func (c *UserController) getUsers(ctx *fiber.Ctx) error {
 	var query UserQuery
 
 	if err := ctx.QueryParser(&query); err != nil {
-		return errors.NewBadRequestError(common.UserDomain, err, nil)
+		return errors.NewBadRequestError(constants.UserDomain, err, nil)
 	}
 
-	if err := c.validate.Struct(common.UserDomain, &query); err != nil {
-		return errors.NewValidationError(common.UserDomain, err, nil)
+	if err := c.validate.Struct(constants.UserDomain, &query); err != nil {
+		return errors.NewValidationError(constants.UserDomain, err, nil)
 	}
 
 	userFilter, err := UserFilterFromQuery(query)
@@ -82,7 +82,7 @@ func (c *UserController) getUser(ctx *fiber.Ctx) error {
 
 	id, err := strconv.ParseUint(idStr, 10, 64)
 	if err != nil {
-		return errors.NewBadRequestError(common.UserDomain, err, map[string]any{"id": idStr})
+		return errors.NewBadRequestError(constants.UserDomain, err, map[string]any{"id": idStr})
 	}
 
 	users, _, err := c.userService.GetUsers(ctx.Context(), &domain.UserFilter{

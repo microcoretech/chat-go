@@ -15,7 +15,7 @@
 package errors
 
 import (
-	"chat-go/internal/common/common"
+	"chat-go/internal/common/constants"
 )
 
 const ForbiddenErrorType = "ForbiddenError"
@@ -26,6 +26,6 @@ type ForbiddenError struct {
 
 func NewForbiddenError() *ForbiddenError {
 	return &ForbiddenError{
-		ErrorData: NewErrorData(common.CommonDomain, ForbiddenErrorType, nil, nil),
+		ErrorData: NewErrorData(constants.CommonDomain, ForbiddenErrorType, nil, nil),
 	}
 }

@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"strings"
 
-	"chat-go/internal/chat/common"
+	"chat-go/internal/chat/constants"
 	"chat-go/internal/chat/domain"
 	"chat-go/internal/common/errors"
 	"chat-go/internal/common/repository"
@@ -177,14 +177,14 @@ func (r *ChatRepoImpl) GetChat(ctx context.Context, id uint64) (*domain.Chat, er
 
 	rows, err := r.db.QueryContext(ctx, query, id)
 	if err != nil {
-		return nil, errors.NewDatabaseError(common.ChatDomain, err)
+		return nil, errors.NewDatabaseError(constants.ChatDomain, err)
 	}
 
 	defer rows.Close()
 
 	chats, err := r.scan(rows)
 	if err != nil {
-		return nil, errors.NewDatabaseError(common.ChatDomain, err)
+		return nil, errors.NewDatabaseError(constants.ChatDomain, err)
 	}
 
 	if len(chats) == 0 {
@@ -239,7 +239,7 @@ func (r *ChatRepoImpl) GetChats(ctx context.Context, filter *domain.ChatFilter) 
 
 	rows, err := r.db.QueryContext(ctx, query, values...)
 	if err != nil {
-		return nil, errors.NewDatabaseError(common.ChatDomain, err)
+		return nil, errors.NewDatabaseError(constants.ChatDomain, err)
 	}
 
 	defer rows.Close()
@@ -267,7 +267,7 @@ func (r *ChatRepoImpl) GetChatsCount(ctx context.Context, filter *domain.ChatFil
 
 	rows, err := r.db.QueryContext(ctx, query, values...)
 	if err != nil {
-		return 0, errors.NewDatabaseError(common.ChatDomain, err, "error on query chats count")
+		return 0, errors.NewDatabaseError(constants.ChatDomain, err, "error on query chats count")
 	}
 
 	defer rows.Close()
@@ -277,7 +277,7 @@ func (r *ChatRepoImpl) GetChatsCount(ctx context.Context, filter *domain.ChatFil
 	if rows.Next() {
 		err := rows.Scan(&count)
 		if err != nil {
-			return 0, errors.NewDatabaseError(common.ChatDomain, err, "error on scan chats count")
+			return 0, errors.NewDatabaseError(constants.ChatDomain, err, "error on scan chats count")
 		}
 	}
 
@@ -326,14 +326,14 @@ func (r *ChatRepoImpl) CreateChat(ctx context.Context, chat domain.Chat, tx repo
 	}
 
 	if err != nil {
-		return nil, errors.NewDatabaseError(common.ChatDomain, err)
+		return nil, errors.NewDatabaseError(constants.ChatDomain, err)
 	}
 
 	defer rows.Close()
 
 	chats, err := r.scan(rows)
 	if err != nil {
-		return nil, errors.NewDatabaseError(common.ChatDomain, err)
+		return nil, errors.NewDatabaseError(constants.ChatDomain, err)
 	}
 
 	if len(chats) == 0 {
@@ -362,13 +362,13 @@ func (r *ChatRepoImpl) UpdateChat(ctx context.Context, chat domain.Chat) (*domai
 
 	rows, err := r.db.QueryContext(ctx, query, chat.Name, chat.Image.URL, chat.ID)
 	if err != nil {
-		return nil, errors.NewDatabaseError(common.ChatDomain, err, "failed to update chat")
+		return nil, errors.NewDatabaseError(constants.ChatDomain, err, "failed to update chat")
 	}
 	defer rows.Close()
 
 	chats, err := r.scan(rows)
 	if err != nil {
-		return nil, errors.NewDatabaseError(common.ChatDomain, err)
+		return nil, errors.NewDatabaseError(constants.ChatDomain, err)
 	}
 
 	if len(chats) == 0 {
@@ -382,7 +382,7 @@ func (r *ChatRepoImpl) DeleteChat(ctx context.Context, id uint64) error {
 	query := fmt.Sprintf(`DELETE FROM %[1]s WHERE id = $1`, chatTableName)
 	_, err := r.db.ExecContext(ctx, query, id)
 	if err != nil {
-		return errors.NewDatabaseError(common.ChatDomain, err)
+		return errors.NewDatabaseError(constants.ChatDomain, err)
 	}
 	return nil
 }

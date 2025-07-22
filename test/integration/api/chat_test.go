@@ -23,32 +23,32 @@ import (
 
 	chatdomain "chat-go/internal/chat/domain"
 	chathttp "chat-go/internal/chat/http"
+	"chat-go/test/helpers"
 	"chat-go/test/integration/framework"
-	"chat-go/test/util"
 )
 
 var _ = ginkgo.Describe("Chat", ginkgo.Ordered, ginkgo.ContinueOnFailure, func() {
 	var (
-		httpClient util.HTTPClient
+		httpClient helpers.HTTPClient
 		chat       *chathttp.ChatDto
 	)
 
 	ginkgo.BeforeAll(func() {
-		httpClient = framework.NewTestHTTPClient(fwk).WithTimeout(util.Timeout)
+		httpClient = framework.NewTestHTTPClient(fwk).WithTimeout(helpers.Timeout)
 
-		chat = util.CreateChat(httpClient, "", util.AdminToken, &chathttp.CreateChatDto{
+		chat = helpers.CreateChat(httpClient, "", helpers.AdminToken, &chathttp.CreateChatDto{
 			Name: "Chat",
 			Type: uint8(chatdomain.GroupChatType),
 		})
 	})
 
 	ginkgo.AfterAll(func() {
-		util.DeleteChat(httpClient, "", util.AdminToken, chat.ID)
+		helpers.DeleteChat(httpClient, "", helpers.AdminToken, chat.ID)
 	})
 
 	ginkgo.Context("get chats endpoint", func() {
 		ginkgo.It("should return valid response", func() {
-			chats := util.GetChats(httpClient, "", util.AdminToken)
+			chats := helpers.GetChats(httpClient, "", helpers.AdminToken)
 			gomega.Expect(chats.Items).To(gomega.HaveLen(1))
 			gomega.Expect(chats.Count).To(gomega.Equal(uint64(1)))
 			gomega.Expect(&chats.Items[0]).To(gomega.BeComparableTo(chat))
@@ -58,14 +58,14 @@ var _ = ginkgo.Describe("Chat", ginkgo.Ordered, ginkgo.ContinueOnFailure, func()
 	ginkgo.Context("delete chat endpoint", func() {
 		ginkgo.It("shouldn't delete not owned chat", func() {
 			ginkgo.By("creating chat", func() {
-				chat = util.CreateChat(httpClient, "", util.AdminToken, &chathttp.CreateChatDto{
+				chat = helpers.CreateChat(httpClient, "", helpers.AdminToken, &chathttp.CreateChatDto{
 					Name: "Chat",
 					Type: uint8(chatdomain.GroupChatType),
 				})
 			})
 
 			ginkgo.By("deleting chat", func() {
-				util.DeleteChatWithStatus(httpClient, "", util.UserToken, chat.ID, http.StatusForbidden)
+				helpers.DeleteChatWithStatus(httpClient, "", helpers.UserToken, chat.ID, http.StatusForbidden)
 			})
 		})
 	})
@@ -75,7 +75,7 @@ var _ = ginkgo.Describe("Chat", ginkgo.Ordered, ginkgo.ContinueOnFailure, func()
 				Name: "Updated Group Chat",
 			}
 
-			updatedChat := util.UpdateChat(httpClient, "", util.UserToken, chat.ID, updateChatRequest, http.StatusForbidden)
+			updatedChat := helpers.UpdateChat(httpClient, "", helpers.UserToken, chat.ID, updateChatRequest, http.StatusForbidden)
 			gomega.Expect(updatedChat).To(gomega.BeComparableTo(
 				&chathttp.ChatDto{},
 				cmpopts.IgnoreFields(chathttp.ChatDto{}, "CreatedAt", "UpdatedAt"),

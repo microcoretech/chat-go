@@ -17,7 +17,7 @@ package api
 import (
 	"github.com/gofiber/fiber/v2"
 
-	"chat-go/internal/common/common"
+	"chat-go/internal/common/constants"
 	"chat-go/internal/infrastructure/configs"
 )
 
@@ -29,7 +29,7 @@ type RootResponse struct {
 func rootHandler(cfg *configs.Config) func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		return c.JSON(&RootResponse{
-			Service: common.ServiceName,
+			Service: constants.ServiceName,
 			Version: cfg.Version,
 		})
 	}

@@ -15,7 +15,7 @@
 package errors
 
 import (
-	"chat-go/internal/chat/common"
+	"chat-go/internal/chat/constants"
 	"chat-go/internal/common/errors"
 )
 
@@ -27,6 +27,6 @@ type IncorrectUsersCountError struct {
 
 func NewIncorrectUsersCountError() *IncorrectUsersCountError {
 	return &IncorrectUsersCountError{
-		ErrorData: errors.NewErrorData(common.ChatDomain, IncorrectUsersCountErrorType, nil, nil),
+		ErrorData: errors.NewErrorData(constants.ChatDomain, IncorrectUsersCountErrorType, nil, nil),
 	}
 }

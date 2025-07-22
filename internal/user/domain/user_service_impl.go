@@ -29,7 +29,7 @@ import (
 	commonerrors "chat-go/internal/common/errors"
 	commonhttp "chat-go/internal/common/http"
 	"chat-go/internal/infrastructure/configs"
-	"chat-go/internal/user/common"
+	"chat-go/internal/user/constants"
 )
 
 type UserServiceImpl struct {
@@ -135,7 +135,7 @@ func (s *UserServiceImpl) GetUsers(ctx context.Context, filter *domain.UserFilte
 
 	switch resp.StatusCode {
 	case http.StatusBadRequest:
-		return nil, 0, commonerrors.NewBadRequestError(common.UserDomain, nil, map[string]any{
+		return nil, 0, commonerrors.NewBadRequestError(constants.UserDomain, nil, map[string]any{
 			"body": string(body),
 		})
 	case http.StatusUnauthorized:

@@ -15,7 +15,7 @@
 package errors
 
 import (
-	"chat-go/internal/chat/common"
+	"chat-go/internal/chat/constants"
 	"chat-go/internal/common/errors"
 )
 
@@ -27,6 +27,6 @@ type ChatNotFoundError struct {
 
 func NewChatNotFoundError(data map[string]any) *ChatNotFoundError {
 	return &ChatNotFoundError{
-		ErrorData: errors.NewErrorData(common.ChatDomain, ChatNotFoundErrorType, nil, data),
+		ErrorData: errors.NewErrorData(constants.ChatDomain, ChatNotFoundErrorType, nil, data),
 	}
 }

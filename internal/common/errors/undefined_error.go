@@ -15,7 +15,7 @@
 package errors
 
 import (
-	"chat-go/internal/common/common"
+	"chat-go/internal/common/constants"
 )
 
 const UndefinedErrorType = "UndefinedError"
@@ -26,6 +26,6 @@ type UndefinedError struct {
 
 func NewUndefinedError(err error, devDetails ...string) *UndefinedError {
 	return &UndefinedError{
-		ErrorData: NewErrorData(common.CommonDomain, UndefinedErrorType, err, nil, devDetails...),
+		ErrorData: NewErrorData(constants.CommonDomain, UndefinedErrorType, err, nil, devDetails...),
 	}
 }

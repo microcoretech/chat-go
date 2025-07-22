@@ -37,11 +37,11 @@ import (
 	usercontract "chat-go/internal/user/contract"
 	userdomain "chat-go/internal/user/domain"
 	userhttp "chat-go/internal/user/http"
-	"chat-go/test/util"
+	"chat-go/test/helpers"
 )
 
 type Framework struct {
-	*util.Infrastructure
+	*helpers.Infrastructure
 
 	cfg      *configs.Config
 	log      *logrus.Logger
@@ -70,7 +70,7 @@ type Framework struct {
 
 func NewFramework() *Framework {
 	return &Framework{
-		Infrastructure: util.NewInfrastructure(),
+		Infrastructure: helpers.NewInfrastructure(),
 	}
 }
 
@@ -90,17 +90,17 @@ func (f *Framework) Setup(ctx context.Context) error {
 	}
 	f.log.SetOutput(core.GinkgoWriter)
 
-	f.cfg.PostgresURI, err = util.PostgresURIForContainer(ctx, f.PostgresContainer())
+	f.cfg.PostgresURI, err = helpers.PostgresURIForContainer(ctx, f.PostgresContainer())
 	if err != nil {
 		return err
 	}
 
-	f.cfg.GetCurrentUserEndpoint, err = util.GetCurrentUserEndpointForContainer(ctx, f.MockserverContainer())
+	f.cfg.GetCurrentUserEndpoint, err = helpers.GetCurrentUserEndpointForContainer(ctx, f.MockserverContainer())
 	if err != nil {
 		return err
 	}
 
-	f.cfg.GetUsersEndpoint, err = util.GetUsersEndpointContainer(ctx, f.MockserverContainer())
+	f.cfg.GetUsersEndpoint, err = helpers.GetUsersEndpointContainer(ctx, f.MockserverContainer())
 	if err != nil {
 		return err
 	}

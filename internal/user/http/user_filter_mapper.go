@@ -18,7 +18,7 @@ import (
 	"chat-go/internal/common/domain"
 	"chat-go/internal/common/errors"
 	"chat-go/internal/common/http"
-	"chat-go/internal/user/common"
+	"chat-go/internal/user/constants"
 )
 
 var userSortFields = []string{
@@ -34,7 +34,7 @@ func UserFilterFromQuery(query UserQuery) (domain.UserFilter, error) {
 	sort, err := http.SortFromDto(query.Sort, userSortFields)
 	if err != nil {
 		return domain.UserFilter{}, errors.NewBadRequestError(
-			common.UserDomain, err, map[string]any{"sort": query.Sort})
+			constants.UserDomain, err, map[string]any{"sort": query.Sort})
 	}
 
 	return domain.UserFilter{

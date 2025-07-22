@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"strings"
 
-	"chat-go/internal/chat/common"
+	"chat-go/internal/chat/constants"
 	"chat-go/internal/chat/domain"
 	"chat-go/internal/common/errors"
 	"chat-go/internal/common/repository"
@@ -152,7 +152,7 @@ func (r *MessageRepoImpl) GetMessages(ctx context.Context, filter *domain.Messag
 
 	rows, err := r.db.QueryContext(ctx, query, values...)
 	if err != nil {
-		return nil, errors.NewDatabaseError(common.ChatDomain, err)
+		return nil, errors.NewDatabaseError(constants.ChatDomain, err)
 	}
 
 	defer rows.Close()
@@ -180,7 +180,7 @@ func (r *MessageRepoImpl) GetMessagesCount(ctx context.Context, filter *domain.M
 
 	rows, err := r.db.QueryContext(ctx, query, values...)
 	if err != nil {
-		return 0, errors.NewDatabaseError(common.ChatDomain, err)
+		return 0, errors.NewDatabaseError(constants.ChatDomain, err)
 	}
 
 	defer rows.Close()
@@ -190,7 +190,7 @@ func (r *MessageRepoImpl) GetMessagesCount(ctx context.Context, filter *domain.M
 	if rows.Next() {
 		err := rows.Scan(&count)
 		if err != nil {
-			return 0, errors.NewDatabaseError(common.ChatDomain, err)
+			return 0, errors.NewDatabaseError(constants.ChatDomain, err)
 		}
 	}
 
@@ -233,14 +233,14 @@ func (r *MessageRepoImpl) CreateMessage(ctx context.Context, message domain.Mess
 	}
 
 	if err != nil {
-		return nil, errors.NewDatabaseError(common.ChatDomain, err)
+		return nil, errors.NewDatabaseError(constants.ChatDomain, err)
 	}
 
 	defer rows.Close()
 
 	messages, err := r.scan(rows)
 	if err != nil {
-		return nil, errors.NewDatabaseError(common.ChatDomain, err)
+		return nil, errors.NewDatabaseError(constants.ChatDomain, err)
 	}
 
 	if len(messages) == 0 {
