@@ -698,8 +698,8 @@ github.com/tenntenn/text/transform v0.0.0-20200319021203-7eef512accb3 h1:f+jULpR
 github.com/tenntenn/text/transform v0.0.0-20200319021203-7eef512accb3/go.mod h1:ON8b8w4BN/kE1EOhwT0o+d62W65a6aPw1nouo9LMgyY=
 github.com/testcontainers/testcontainers-go v0.38.0 h1:d7uEapLcv2P8AvH8ahLqDMMxda2W9gQN1nRbHS28HBw=
 github.com/testcontainers/testcontainers-go v0.38.0/go.mod h1:C52c9MoHpWO+C4aqmgSU+hxlR5jlEayWtgYrb8Pzz1w=
-github.com/testcontainers/testcontainers-go/modules/mockserver v0.37.0 h1:zEU8ZtQBnWfjFL92Oc8g+X9sP0DIKTrl97BYGHJb3mY=
-github.com/testcontainers/testcontainers-go/modules/mockserver v0.37.0/go.mod h1:OcxJA/DDLYaqtMwJLBfVG3Db+hR2sgie6X3XLVufa5o=
+github.com/testcontainers/testcontainers-go/modules/mockserver v0.38.0 h1:PY5iWHs05PvuK+/xMVv6/6Oklka6HB/EheGflj8nfUs=
+github.com/testcontainers/testcontainers-go/modules/mockserver v0.38.0/go.mod h1:x5PsZyIyK9CWclEgXC73hnQmLOVjDFF+TWtYPZVNvbs=
 github.com/testcontainers/testcontainers-go/modules/postgres v0.38.0 h1:KFdx9A0yF94K70T6ibSuvgkQQeX1xKlZVF3hEagXEtY=
 github.com/testcontainers/testcontainers-go/modules/postgres v0.38.0/go.mod h1:T/QRECND6N6tAKMxF1Za+G2tpwnGEHcODzHRsgIpw9M=
 github.com/tetafro/godot v1.5.1 h1:PZnjCol4+FqaEzvZg5+O8IY2P3hfY9JzRBNPv1pEDS4=
