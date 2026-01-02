@@ -19,7 +19,7 @@ require (
 	github.com/onsi/gomega v1.38.2
 	github.com/samber/lo v1.51.0
 	github.com/sirupsen/logrus v1.9.3
-	github.com/testcontainers/testcontainers-go v0.39.0
+	github.com/testcontainers/testcontainers-go v0.40.0
 	github.com/testcontainers/testcontainers-go/modules/mockserver v0.39.0
 	github.com/testcontainers/testcontainers-go/modules/postgres v0.39.0
 	golang.org/x/exp v0.0.0-20250210185358-939b2ce775ac
@@ -69,7 +69,7 @@ require (
 	github.com/butuzov/mirror v1.3.0 // indirect
 	github.com/catenacyber/perfsprint v0.9.1 // indirect
 	github.com/ccojocar/zxcvbn-go v1.0.4 // indirect
-	github.com/cenkalti/backoff/v4 v4.2.1 // indirect
+	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/charithe/durationcheck v0.0.10 // indirect
 	github.com/charmbracelet/colorprofile v0.2.3-0.20250311203215-f60798e515dc // indirect
