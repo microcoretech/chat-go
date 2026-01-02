@@ -23,7 +23,7 @@ require (
 	github.com/testcontainers/testcontainers-go/modules/mockserver v0.39.0
 	github.com/testcontainers/testcontainers-go/modules/postgres v0.39.0
 	golang.org/x/exp v0.0.0-20250210185358-939b2ce775ac
-	golang.org/x/sync v0.18.0
+	golang.org/x/sync v0.19.0
 )
 
 require (
