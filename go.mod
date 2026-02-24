@@ -3,7 +3,7 @@ module chat-go
 go 1.24.1
 
 require (
-	github.com/caarlos0/env/v11 v11.3.1
+	github.com/caarlos0/env/v11 v11.4.0
 	github.com/docker/docker v28.5.2+incompatible
 	github.com/fasthttp/websocket v1.5.12
 	github.com/go-playground/validator/v10 v10.30.1
