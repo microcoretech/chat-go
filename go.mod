@@ -17,7 +17,7 @@ require (
 	github.com/lib/pq v1.11.2
 	github.com/onsi/ginkgo/v2 v2.28.1
 	github.com/onsi/gomega v1.39.1
-	github.com/samber/lo v1.52.0
+	github.com/samber/lo v1.53.0
 	github.com/sirupsen/logrus v1.9.4
 	github.com/testcontainers/testcontainers-go v0.40.0
 	github.com/testcontainers/testcontainers-go/modules/mockserver v0.40.0
