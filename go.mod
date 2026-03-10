@@ -1,6 +1,6 @@
 module chat-go
 
-go 1.25.0
+go 1.24.1
 
 require (
 	github.com/caarlos0/env/v11 v11.4.0
@@ -23,7 +23,7 @@ require (
 	github.com/testcontainers/testcontainers-go/modules/mockserver v0.40.0
 	github.com/testcontainers/testcontainers-go/modules/postgres v0.40.0
 	golang.org/x/exp v0.0.0-20250210185358-939b2ce775ac
-	golang.org/x/sync v0.20.0
+	golang.org/x/sync v0.19.0
 )
 
 require (
